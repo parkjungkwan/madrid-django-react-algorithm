@@ -8,6 +8,7 @@ const Navi = () => (
      
      <NaviList>
             <NaviItem><Link to='/counter'style={{textDecorationLine:'none',color:'black'}}><strong>Counter</strong></Link></NaviItem>
+            <NaviItem><Link to='/todo'style={{textDecorationLine:'none',color:'black'}}><strong>Todo</strong></Link></NaviItem>
             <NaviItem><Link to='/math'style={{textDecorationLine:'none',color:'black'}}><strong>Math</strong></Link></NaviItem>
             <NaviItem><Link to='/linear'style={{textDecorationLine:'none',color:'black'}}><strong>Linear</strong></Link></NaviItem>
             <NaviItem><Link to="/nonlinear"style={{textDecorationLine:'none',color:'black'}}><strong>NonLinear</strong></Link></NaviItem>

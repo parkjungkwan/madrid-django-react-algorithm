@@ -11,7 +11,7 @@ export default function Counter(){
     const [count, setCount] = useState(0)
 
     return (<CounterDiv >
-            {count == 0 && <Stack sx={{ width: '300px','margin': '0 auto' }} spacing={2}>
+            {count == 0 && <Stack sx={{ width: '200px','margin': '0 auto' }} spacing={2}>
                 <Alert severity="warning">
                     <AlertTitle>Warning</AlertTitle>
                     메일이 없습니다

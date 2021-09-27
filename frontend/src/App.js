@@ -1,6 +1,6 @@
 import React from "react";
 import {Route,Switch, Redirect} from 'react-router-dom'
-import { Navi, Counter } from "common";
+import { Navi, Counter, Todo } from "common";
 import { Linear, NonLinear } from "datastructure";
 import { BackTracking, BruteForce, DivideConquer, DynamicProgramming, Greedy } from "algorithm";
 import { Mathematics } from "datastructure";
@@ -13,6 +13,7 @@ const App = () => (
     <Route exact path = '/' component = {Home}/>
     <Redirect from='/home' to= { '/' }/>
     <Route exact path = '/counter' component = {Counter}/>
+    <Route exact path = '/todo' component = {Todo}/>
     <Route exact path = '/mathematics' component = {Mathematics}/>
     <Route exact path = '/linear' component = {Linear}/>
     <Route exact path = '/nonLinear' component = {NonLinear}/>
