@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { v4 as uuidv4} from 'uuid'
 import styled from 'styled-components'
 import { addTodoAction } from "reducers/todo.reducer";
-export default function Todo() {
+export default function TodoInput() {
     const [todo, setTodo] = useState('')
     const dispatch = useDispatch()
     const submitForm = e =>{
