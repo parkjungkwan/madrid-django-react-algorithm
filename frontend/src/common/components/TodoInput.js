@@ -16,7 +16,8 @@ export default function TodoInput() {
         addTodo(newTodo)
         setTodo('')
     }
-    const addTodo = todo => dispatch(addTodoAction(todo))
+
+    const addTodo = todo => (dispatch(addTodoAction(todo)))
     const handleChange = e =>{
         e.preventDefault()
         setTodo(e.target.value)
