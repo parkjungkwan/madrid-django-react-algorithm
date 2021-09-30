@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 from admin.common.views import Connection
 urlpatterns = [
-    path('connection', Connection.as_view()),
-    # path(r'^api/users/', include('admin.user.urls')),
+    path('api/connect', Connection.as_view()),
+    # path('api/users/', include('admin.user.urls')),
 ]
