@@ -42,14 +42,14 @@ export default function UserJoin() {
     const dispatch = useDispatch()
     const handleSubmit = e => {
         e.preventDefault();
-        const payload = {username, password, email, birth, address}
-        alert(`가입 회원정보: ${JSON.stringify(payload)}`)
-        //addUser(payload)
+        alert(`가입 회원정보: ${JSON.stringify(user)}`)
+        addUser(user)
     }
     const addUser = payload => (dispatch(addUserAction(payload)))
     const handleChange = e => {
       e.preventDefault()
       const {name, value} = e.target
+      alert(`name: ${name}, value: ${value}`)
       setUser({
         ...user,
         [name]: value
