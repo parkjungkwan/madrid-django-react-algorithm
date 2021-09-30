@@ -14,6 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useDispatch } from "react-redux";
 import { addUserAction } from "reducers/user.reducer";
+import { userRegister } from 'api';
 
 function Copyright(props) {
   return (
@@ -39,13 +40,16 @@ export default function UserJoin() {
         address: ''
     })
     const {username, password, email, birth, address} = `user`
-    const dispatch = useDispatch()
+    
     const handleSubmit = e => {
         e.preventDefault();
         alert(`가입 회원정보: ${JSON.stringify(user)}`)
-        addUser(user)
+        userRegister({user})
+        .then(res => {alert(`회원가입완료: ${res.data.result}`)})
+        .catch(err => {alert(`회원가입 실패: ${err}`)})
+        
     }
-    const addUser = user => (dispatch(addUserAction(user)))
+    
     const handleChange = e => {
       e.preventDefault()
       const {name, value} = e.target
