@@ -18,5 +18,5 @@ from django.urls import path, include
 from admin.common.views import Connection
 urlpatterns = [
     path('connection', Connection.as_view()),
-    path(r'^api/users/', include('admin.user.urls')),
+    # path(r'^api/users/', include('admin.user.urls')),
 ]
