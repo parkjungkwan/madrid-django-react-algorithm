@@ -31,28 +31,31 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function UserJoin() {
-    const [username, setUsername] = useState('')
-    const [birth, setBirth] = useState('')
-    const [address, setAddress] = useState('')
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [user, setUser] = useState({
+        username: '',
+        password: '',
+        email: '',
+        birth: '',
+        address: ''
+    })
+    const {username, password, email, birth, address} = `user`
     const dispatch = useDispatch()
     const handleSubmit = e => {
-    e.preventDefault();
-    const user = {email,password}
-      addUser(user)
-      setEmail('')
-      setPassword('')
-  }
-  const addUser = user => (dispatch(addUserAction(user)))
-  const handleEmail = e => {
+        e.preventDefault();
+        const payload = {username, password, email, birth, address}
+        alert(`가입 회원정보: ${JSON.stringify(payload)}`)
+        //addUser(payload)
+    }
+    const addUser = payload => (dispatch(addUserAction(payload)))
+    const handleChange = e => {
       e.preventDefault()
-      setEmail(email)
-  }
-  const handlePassword = e => {
-      e.preventDefault()
-      setPassword(password)
-  }
+      const {name, value} = e.target
+      setUser({
+        ...user,
+        [name]: value
+      })
+    }
+ 
 
   return (
     <ThemeProvider theme={theme}>
@@ -81,8 +84,9 @@ export default function UserJoin() {
               label="username"
               type="text"
               id="username"
+              value = {username}
               autoComplete="current-password"
-              onChange = {handlePassword}
+              onChange = {handleChange}
             />
             <TextField
               margin="normal"
@@ -92,8 +96,9 @@ export default function UserJoin() {
               label="Password"
               type="password"
               id="password"
+              value = {password}
               autoComplete="current-password"
-              onChange = {handlePassword}
+              onChange = {handleChange}
             />
             <TextField
               margin="normal"
@@ -103,9 +108,10 @@ export default function UserJoin() {
               type="text"
               label="Email Address"
               name="email"
+              value = {email}
               autoComplete="email"
               autoFocus
-              onChange = {handleEmail}
+              onChange = {handleChange}
             />
             <TextField
               margin="normal"
@@ -115,8 +121,9 @@ export default function UserJoin() {
               label="birth"
               type="text"
               id="birth"
+              value = {birth}
               autoComplete="current-password"
-              onChange = {handlePassword}
+              onChange = {handleChange}
             />
             <TextField
               margin="normal"
@@ -126,8 +133,9 @@ export default function UserJoin() {
               label="address"
               type="text"
               id="address"
+              value = {address}
               autoComplete="current-password"
-              onChange = {handlePassword}
+              onChange = {handleChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
