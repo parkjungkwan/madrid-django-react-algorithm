@@ -2,21 +2,21 @@ import React from "react";
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-
 const Navi = () => (
     <NaviDiv>
      
      <NaviList>
+            <NaviItem><Link to='/sign-up'style={{textDecorationLine:'none',color:'black'}}><strong>SignUp</strong></Link></NaviItem>
             <NaviItem><Link to='/counter'style={{textDecorationLine:'none',color:'black'}}><strong>Counter</strong></Link></NaviItem>
             <NaviItem><Link to='/todo'style={{textDecorationLine:'none',color:'black'}}><strong>Todo</strong></Link></NaviItem>
             <NaviItem><Link to='/math'style={{textDecorationLine:'none',color:'black'}}><strong>Math</strong></Link></NaviItem>
             <NaviItem><Link to='/linear'style={{textDecorationLine:'none',color:'black'}}><strong>Linear</strong></Link></NaviItem>
             <NaviItem><Link to="/nonlinear"style={{textDecorationLine:'none',color:'black'}}><strong>NonLinear</strong></Link></NaviItem>
-            <NaviItem><Link to="/bruteForce"style={{textDecorationLine:'none',color:'black'}}><strong>Brute Force</strong></Link></NaviItem>
-            <NaviItem><Link to="/divideConquer"style={{textDecorationLine:'none',color:'black'}}><strong>Divide & Conquer</strong></Link></NaviItem>
+            <NaviItem><Link to="/brute-force"style={{textDecorationLine:'none',color:'black'}}><strong>Brute Force</strong></Link></NaviItem>
+            <NaviItem><Link to="/divide-conquer"style={{textDecorationLine:'none',color:'black'}}><strong>Divide & Conquer</strong></Link></NaviItem>
             <NaviItem><Link to="/greedy"style={{textDecorationLine:'none',color:'black'}}><strong>Greedy</strong></Link></NaviItem>
-            <NaviItem><Link to="/dynamicProgramming"style={{textDecorationLine:'none',color:'black'}}><strong>Dynamic Programming</strong></Link></NaviItem>
-            <NaviItem><Link to="/backTracking "style={{textDecorationLine:'none',color:'black'}}><strong>Back Tracking</strong></Link></NaviItem>
+            <NaviItem><Link to="/dp"style={{textDecorationLine:'none',color:'black'}}><strong>Dynamic Programming</strong></Link></NaviItem>
+            <NaviItem><Link to="/back-tracking "style={{textDecorationLine:'none',color:'black'}}><strong>Back Tracking</strong></Link></NaviItem>
         </NaviList>
     </NaviDiv>
 )

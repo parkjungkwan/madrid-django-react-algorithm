@@ -1,14 +1,7 @@
 import React from "react";
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import CommentIcon from '@mui/icons-material/Comment';
+
 import { toggleTodoAction, deleteTodoAction  } from "reducers/todo.reducer";
 export default function TodoList() {
     const todos = useSelector( state => state.todoReducer.todos )

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +12,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { useDispatch } from "react-redux";
+import { addUserAction } from "reducers/user.reducer";
 
 function Copyright(props) {
   return (
@@ -28,17 +30,29 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
-    
-  const handleSubmit = e => {
+export default function UserJoin() {
+    const [username, setUsername] = useState('')
+    const [birth, setBirth] = useState('')
+    const [address, setAddress] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const dispatch = useDispatch()
+    const handleSubmit = e => {
     e.preventDefault();
-    
-    const user = {
-        email: '',
-        password: '',
-      }
-
-  };
+    const user = {email,password}
+      addUser(user)
+      setEmail('')
+      setPassword('')
+  }
+  const addUser = user => (dispatch(addUserAction(user)))
+  const handleEmail = e => {
+      e.preventDefault()
+      setEmail(email)
+  }
+  const handlePassword = e => {
+      e.preventDefault()
+      setPassword(password)
+  }
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,11 +77,12 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
+              name="username"
+              label="username"
+              type="text"
+              id="username"
+              autoComplete="current-password"
+              onChange = {handlePassword}
             />
             <TextField
               margin="normal"
@@ -78,6 +93,41 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange = {handlePassword}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              type="text"
+              label="Email Address"
+              name="email"
+              autoComplete="email"
+              autoFocus
+              onChange = {handleEmail}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="birth"
+              label="birth"
+              type="text"
+              id="birth"
+              autoComplete="current-password"
+              onChange = {handlePassword}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="address"
+              label="address"
+              type="text"
+              id="address"
+              autoComplete="current-password"
+              onChange = {handlePassword}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -91,18 +141,14 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid>
-            </Grid>
+            <Button
+              type="button"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Cancel
+            </Button>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
