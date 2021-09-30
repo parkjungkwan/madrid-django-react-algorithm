@@ -54,7 +54,6 @@ export default function UserJoin() {
     const handleChange = e => {
       e.preventDefault()
       const {name, value} = e.target
-      alert(`name: ${name}, value: ${value}`)
       setUser({
         ...user,
         [name]: value
