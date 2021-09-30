@@ -35,11 +35,12 @@ export default function UserJoin() {
     const [user, setUser] = useState({
         username: '',
         password: '',
+        name: '',
         email: '',
         birth: '',
         address: ''
     })
-    const {username, password, email, birth, address} = `user`
+    const {username, password, name, email, birth, address} = `user`
     
     const handleSubmit = e => {
         e.preventDefault();
@@ -89,7 +90,6 @@ export default function UserJoin() {
               type="text"
               id="username"
               value = {username}
-              autoComplete="current-password"
               onChange = {handleChange}
             />
             <TextField
@@ -101,7 +101,17 @@ export default function UserJoin() {
               type="password"
               id="password"
               value = {password}
-              autoComplete="current-password"
+              onChange = {handleChange}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="name"
+              label="name"
+              type="text"
+              id="name"
+              value = {name}
               onChange = {handleChange}
             />
             <TextField
@@ -113,7 +123,6 @@ export default function UserJoin() {
               label="Email Address"
               name="email"
               value = {email}
-              autoComplete="email"
               autoFocus
               onChange = {handleChange}
             />
@@ -126,7 +135,6 @@ export default function UserJoin() {
               type="text"
               id="birth"
               value = {birth}
-              autoComplete="current-password"
               onChange = {handleChange}
             />
             <TextField
@@ -138,7 +146,6 @@ export default function UserJoin() {
               type="text"
               id="address"
               value = {address}
-              autoComplete="current-password"
               onChange = {handleChange}
             />
             <FormControlLabel
