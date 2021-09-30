@@ -45,7 +45,7 @@ export default function UserJoin() {
         alert(`가입 회원정보: ${JSON.stringify(user)}`)
         addUser(user)
     }
-    const addUser = payload => (dispatch(addUserAction(payload)))
+    const addUser = user => (dispatch(addUserAction(user)))
     const handleChange = e => {
       e.preventDefault()
       const {name, value} = e.target
