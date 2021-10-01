@@ -81,8 +81,12 @@ WSGI_APPLICATION = 'admin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'mariadb',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.0.1',
+        'PORT': '3306'
     }
 }
 
@@ -119,7 +123,9 @@ USE_L10N = True
 
 USE_TZ = True
 
+TIME_ZONE = 'Asia/Seoul'
 
+USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
