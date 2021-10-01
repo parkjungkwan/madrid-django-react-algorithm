@@ -15,8 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from admin.common.views import Connection
+
 urlpatterns = [
-    path('api/connect', Connection.as_view()),
+    path('api/connect', include('admin.common.urls')),
     # path('api/users/', include('admin.user.urls')),
 ]
