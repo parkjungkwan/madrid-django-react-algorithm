@@ -2,14 +2,12 @@ from django.db import models
 from admin.common.models import Dataset
 import pandas as pd
 
-
 class HousingService(object):
 
     dataset = Dataset()
 
     def new_model(self) -> object:
-        return pd.read_csv('./data/housing.csv')
-
+        return pd.read_csv('admin/housing/data/housing.csv')
 
 class Housing(models.Model):
 
@@ -29,4 +27,6 @@ class Housing(models.Model):
 
     def __str__(self):
         return f'[{self.pk}] {self.housing_id}'
+
+
 
