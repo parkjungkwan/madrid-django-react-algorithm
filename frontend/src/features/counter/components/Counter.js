@@ -7,10 +7,10 @@ import {
   incrementAsync,
   incrementIfOdd,
   selectCount,
-} from '../counterSlice';
+} from 'features/counter/modules/counterSlice';
 import styles from './Counter.module.css';
 
-export function Counter() {
+export default function Counter() {
   const count = useSelector(selectCount);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');

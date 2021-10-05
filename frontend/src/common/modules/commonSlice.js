@@ -3,7 +3,7 @@ import { connect } from './commonAPI';
 
 const initialState = {
   server: '',
-  header: {},
+  header: {'Content-Type':'application/json'},
 };
 
 export const connectAsync = createAsyncThunk(
@@ -30,3 +30,4 @@ export const commonSlice = createSlice({
 
 export const { getServer, getHeader } = commonSlice.actions;
 export default commonSlice.reducer;
+
