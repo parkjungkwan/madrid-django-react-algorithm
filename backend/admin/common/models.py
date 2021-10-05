@@ -10,7 +10,7 @@ class DFrameGenerator(object):
     test: object
     id: str
     label: str
-    fname: object
+    fname: str
 
     @property
     def fname(self) -> object: return self._fname
