@@ -10,11 +10,13 @@ def housing_info(request):
     HousingService().housing_info()
     return JsonResponse({'result': 'Housing Info Success'})
 
-''' 오늘은 여기까지 '''
-
 def housing_hist(request):
     HousingService().housing_hist()
     return JsonResponse({'result': 'Housing Hist Success'})
+
+def split_model(request):
+    HousingService().split_model()
+    return JsonResponse({'result': 'Housing Split Success'})
 
 def income_cat_hist(request):
     hs = HousingService()
