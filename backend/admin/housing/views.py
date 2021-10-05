@@ -10,8 +10,10 @@ def housing_info(request):
     HousingService().housing_info()
     return JsonResponse({'result': 'Housing Info Success'})
 
+''' 오늘은 여기까지 '''
+
 def housing_hist(request):
-    HousingService().housing_info()
+    HousingService().housing_hist()
     return JsonResponse({'result': 'Housing Hist Success'})
 
 def income_cat_hist(request):

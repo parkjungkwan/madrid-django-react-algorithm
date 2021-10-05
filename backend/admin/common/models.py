@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from icecream import ic
 import pandas as pd
 
+
 @dataclass
 class DFrameGenerator(object):
 
@@ -9,13 +10,13 @@ class DFrameGenerator(object):
     test: object
     id: str
     label: str
-    dframe: object
+    fname: object
 
     @property
-    def dframe(self) -> object: return self._dframe
+    def fname(self) -> object: return self._fname
 
-    @dframe.setter
-    def dframe(self, fname): self._dframe = pd.read_csv(fname)
+    @fname.setter
+    def fname(self, fname): self._fname = fname
 
     @property
     def train(self) -> object: return self._train
@@ -41,11 +42,14 @@ class DFrameGenerator(object):
     @label.setter
     def label(self, label): self._label = label
 
-    def dframe_info(self):
-        ic(self.dframe.head(3))
-        ic(self.dframe.tail(3))
-        ic(self.dframe.info())
-        ic(self.dframe.describe())
+    def create_model(self):
+        return pd.read_csv(self.fname)
+
+    def model_info(self, model):
+        ic(model.head(3))
+        ic(model.tail(3))
+        ic(model.info())
+        ic(model.describe())
 
 
 
