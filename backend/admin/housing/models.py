@@ -9,6 +9,7 @@ class HousingService(object):
     def new_model(self) -> object:
         return pd.read_csv('admin/housing/data/housing.csv')
 
+
 class Housing(models.Model):
 
     housing_id = models.AutoField(primary_key=True)
