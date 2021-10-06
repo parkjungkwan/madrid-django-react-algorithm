@@ -27,19 +27,19 @@ class DFrameGenerator(object):
     def dframe(self, dframe): self._dframe = dframe
 
     @property
-    def url(self) -> object: return self._url
+    def url(self) -> str: return self._url
 
     @url.setter
     def url(self, url): self._url = url
 
     @property
-    def context(self) -> object: return self._context
+    def context(self) -> str: return self._context
 
     @context.setter
     def context(self, context): self._context = context
 
     @property
-    def fname(self) -> object: return self._fname
+    def fname(self) -> str: return self._fname
 
     @fname.setter
     def fname(self, fname): self._fname = fname
@@ -105,16 +105,16 @@ class Reader(ReaderBase):
         return file.context + file.fname
 
     def csv(self, file) -> object:
-        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',')
+        return pd.read_csv(f'{file}.csv', encoding='UTF-8', thousands=',')
 
     def csv_header(self, file, header)-> object:
-        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',', header=header)
+        return pd.read_csv(f'{file}.csv', encoding='UTF-8', thousands=',', header=header)
 
     def xls(self, file, header, usecols):
-        return pd.read_excel(f'{self.new_file(file)}.xls', header=header, usecols=usecols)
+        return pd.read_excel(f'{file}.xls', header=header, usecols=usecols)
 
     def json(self, file):
-        return json.load(open(f'{self.new_file(file)}json', encoding='UTF-8'))
+        return json.load(open(f'{file}.json', encoding='UTF-8'))
 
     def gmaps(self) -> object:
         return googlemaps.Client(key='')

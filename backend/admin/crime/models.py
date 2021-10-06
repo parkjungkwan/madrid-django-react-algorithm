@@ -23,7 +23,7 @@ class CrimeCctvModel():
         generator.fname = 'crime_in_Seoul'
         crime_file_name = reader.new_file(generator)
         print(f'파일명: {crime_file_name}')
-        crime_model = generator.csv(crime_file_name)
+        crime_model = reader.csv(crime_file_name)
         printer.dframe(crime_model)
         return crime_model
 
