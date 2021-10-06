@@ -2,7 +2,8 @@ from abc import abstractmethod, ABCMeta
 from dataclasses import dataclass
 from icecream import ic
 import pandas as pd
-
+import json
+import googlemaps
 
 @dataclass
 class DFrameGenerator(object):
@@ -12,6 +13,27 @@ class DFrameGenerator(object):
     id: str
     label: str
     fname: str
+    context: str
+    url: str
+    dframe: object
+
+    @property
+    def dframe(self) -> object: return self._dframe
+
+    @dframe.setter
+    def dframe(self, dframe): self._dframe = dframe
+
+    @property
+    def url(self) -> object: return self._url
+
+    @url.setter
+    def url(self, url): self._url = url
+
+    @property
+    def context(self) -> object: return self._context
+
+    @context.setter
+    def context(self, context): self._context = context
 
     @property
     def fname(self) -> object: return self._fname
@@ -65,5 +87,26 @@ class ReaderBase(metaclass=ABCMeta):
     def xls(self):
         pass
 
+    @abstractmethod
+    def json(self):
+        pass
+
 class Reader(ReaderBase):
-    pass
+
+    def new_file(self, file) -> str:
+        return file.context + file.fname
+
+    def csv(self, file) -> object:
+        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',')
+
+    def csv_header(self, file, header)-> object:
+        return pd.read_csv(f'{self.new_file(file)}.csv', encoding='UTF-8', thousands=',', header=header)
+
+    def xls(self, file, header, usecols):
+        return pd.read_excel(f'{self.new_file(file)}.xls', header=header, usecols=usecols)
+
+    def json(self, file):
+        return json.load(open(f'{self.new_file(file)}json', encoding='UTF-8'))
+
+    def gmaps(self) -> object:
+        return googlemaps.Client(key='')
