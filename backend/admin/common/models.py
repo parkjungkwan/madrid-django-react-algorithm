@@ -4,6 +4,9 @@ from icecream import ic
 import pandas as pd
 import json
 import googlemaps
+'''
+
+'''
 
 @dataclass
 class DFrameGenerator(object):
@@ -91,6 +94,11 @@ class ReaderBase(metaclass=ABCMeta):
     def json(self):
         pass
 
+class PrinterBase(metaclass=ABCMeta):
+    @abstractmethod
+    def dframe(self):
+        pass
+
 class Reader(ReaderBase):
 
     def new_file(self, file) -> str:
@@ -110,3 +118,10 @@ class Reader(ReaderBase):
 
     def gmaps(self) -> object:
         return googlemaps.Client(key='')
+
+class Printer(PrinterBase):
+    def dframe(self, this):
+        ic(this.head(3))
+        ic(this.tail(3))
+        ic(this.columns())
+        ic(this.isnull().sum())
