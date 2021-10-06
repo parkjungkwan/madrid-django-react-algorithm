@@ -50,6 +50,14 @@ class CrimeCctvModel():
             gu_name = [gu for gu in temp if gu[-1] == '구'][0]
             gu_names.append(gu_name)
         crime['구별'] = gu_names
+        # 구와 경찰서의 위치가 다른 경우 수작업
+        crime.loc[crime['관서명'] == '혜화서', ['구별']] == '종로구'
+        crime.loc[crime['관서명'] == '서부서', ['구별']] == '은평구'
+        crime.loc[crime['관서명'] == '강서서', ['구별']] == '양천구'
+        crime.loc[crime['관서명'] == '종암서', ['구별']] == '성북구'
+        crime.loc[crime['관서명'] == '방배서', ['구별']] == '서초구'
+        crime.loc[crime['관서명'] == '수서서', ['구별']] == '강남구'
+        crime.to_csv(self.generator.context+'new_data/police_positions.csv')
         
 
 

@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from admin.housing import views
+from admin.crime import views
 
 urlpatterns = {
-    url(r'police-position', views.housing_info),
+    url(r'police-position', views.create_police_position),
 
 }

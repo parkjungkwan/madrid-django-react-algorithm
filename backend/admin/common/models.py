@@ -124,4 +124,4 @@ class Printer(PrinterBase):
         ic(this.head(3))
         ic(this.tail(3))
         ic(this.info())
-        ic(this.isnull().sum())
+        print(this.isnull().sum())
