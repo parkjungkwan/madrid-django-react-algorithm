@@ -123,5 +123,6 @@ class Printer(PrinterBase):
     def dframe(self, this):
         ic(this.head(3))
         ic(this.tail(3))
-        ic(this.columns())
+        # ic(this.columns())
+        ic(this.describe())
         ic(this.isnull().sum())
