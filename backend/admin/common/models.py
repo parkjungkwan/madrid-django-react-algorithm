@@ -1,3 +1,4 @@
+from abc import abstractmethod, ABCMeta
 from dataclasses import dataclass
 from icecream import ic
 import pandas as pd
@@ -51,5 +52,18 @@ class DFrameGenerator(object):
         ic(model.info())
         ic(model.describe())
 
+class ReaderBase(metaclass=ABCMeta):
+    @abstractmethod
+    def new_file(self):
+        pass
 
+    @abstractmethod
+    def csv(self):
+        pass
 
+    @abstractmethod
+    def xls(self):
+        pass
+
+class Reader(ReaderBase):
+    pass

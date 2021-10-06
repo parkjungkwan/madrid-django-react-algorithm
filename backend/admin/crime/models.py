@@ -1,0 +1,3 @@
+class CrimeCctvModel():
+    pass
+
