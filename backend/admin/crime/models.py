@@ -27,6 +27,31 @@ class CrimeCctvModel():
         printer.dframe(crime_model)
         return crime_model
 
+    def create_police_position(self):
+        crime = self.create_crime_model()
+        reader = self.reader
+        station_names = []
+        for name in crime['관서명']:
+            station_names.append('서울'+str(name[:-1] + '경찰서'))
+        station_addrs = []
+        station_lats = []
+        station_lngs = []
+        gmaps = reader.gmaps()
+        for name in station_names:
+            temp = gmaps.geocode(name, language='ko')
+            station_addrs.append(temp[0].get('formatted_address'))
+            temp_loc = temp[0].get('geometry')
+            station_lats.append(temp_loc['location']['lat'])
+            station_lngs.append(temp_loc['location']['lng'])
+            print(f'name : {temp[0].get("formatted_address")}')
+        gu_names = []
+        for name in station_addrs:
+            temp = name.split()
+            gu_name = [gu for gu in temp if gu[-1] == '구'][0]
+            gu_names.append(gu_name)
+        crime['구별'] = gu_names
+        
+
 
 
 
