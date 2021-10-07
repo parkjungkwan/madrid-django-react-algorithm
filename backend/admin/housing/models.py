@@ -1,7 +1,7 @@
 from django.db import models
 import pandas as pd
 import numpy as np
-from admin.common.models import DFrameGenerator
+from admin.common.models import ValueObject
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 import matplotlib.pyplot as plt
@@ -11,12 +11,12 @@ from icecream import ic
 class HousingService(object):
 
     def __init__(self):
-        self.dfg = DFrameGenerator()
-        self.dfg.fname = 'admin/housing/data/housing.csv'
-        self.model = self.dfg.create_model()
+        self.vo = ValueObject()
+        self.vo.fname = 'admin/housing/data/housing.csv'
+        self.model = self.vo.create_model()
 
     def housing_info(self):
-        self.dfg.model_info(self.model)
+        self.vo.model_info(self.model)
 
     def housing_hist(self):
         self.model.hist(bins=50, figsize=(20, 15))
@@ -25,9 +25,9 @@ class HousingService(object):
     def split_model(self) -> []:
         train_set, test_set = train_test_split(self.model, test_size=0.2, random_state=42)
         print('#'*100)
-        self.dfg.model_info(train_set)
+        self.vo.model_info(train_set)
         print('#' * 100)
-        self.dfg.model_info(test_set)
+        self.vo.model_info(test_set)
         return [train_set, test_set]
 
     def income_cat_hist(self):
