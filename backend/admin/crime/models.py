@@ -3,7 +3,7 @@ import pandas as pd
 from admin.common.models import ValueObject, Printer, Reader
 from icecream import ic
 
-class CrimeCctvModel():
+class Crime():
     def __init__(self):
         pass
 
@@ -13,7 +13,7 @@ class CrimeCctvModel():
     '''
     # noinspection PyMethodMayBeStatic
     def process(self):
-        print('### 프로세스 시작 ###')
+        print('############### 프로세스 시작 ###############')
         vo = ValueObject()
         reader = Reader()
         printer = Printer()
@@ -61,9 +61,9 @@ class CrimeCctvModel():
         cctv_pop_df = pd.merge(cctv_df, pop_df)
         cctv_pop_corr = cctv_pop_df.corr()
         ic(cctv_pop_corr)
-        crime_df.groupby('구별').sum()
+        crime_df = crime_df.groupby('구별').sum()
         crime_df['총 범죄 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 발생$', case=False, regex=True)].sum(axis=1)
         crime_df['총 검거 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 검거$', case=False, regex=True)].sum(axis=1)
         crime_df['총 검거율'] = crime_df['총 검거 수'] / crime_df['총 범죄 수'] * 100
         join = pd.merge(cctv_df.loc[:, ['구별', '소계']], crime_df.loc[:, '총 범죄 수':'총 검거율'], on='구별')
-        print(join)
+        ic(join)
