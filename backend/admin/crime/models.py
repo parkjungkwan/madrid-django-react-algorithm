@@ -2,7 +2,7 @@ import pandas as pd
 
 from admin.common.models import ValueObject, Printer, Reader
 from icecream import ic
-
+import numpy as np
 class Crime():
     def __init__(self):
         pass
@@ -23,8 +23,7 @@ class Crime():
         arrest_rate_columns = ['살인검거율', '강도검거율', '강간검거율', '절도검거율', '폭력검거율']  # Ratio
         print('############### 범죄 DF 생성 ###############')
         vo.fname = 'crime_in_Seoul'
-        crime_file_name = reader.new_file(vo)
-        crime_df = reader.csv(crime_file_name)
+        crime_df = reader.csv(reader.new_file(vo))
         print('############### 경찰서 DF 생성 ###############')
         station_names = []
         for name in crime_df['관서명']:
@@ -45,25 +44,38 @@ class Crime():
             gu_name = [gu for gu in temp if gu[-1] == '구'][0]
             gu_names.append(gu_name)
         crime_df['구별'] = gu_names
-        ic(crime_df[crime_df['관서명'] == '혜화서'])
+        print(crime_df[crime_df['관서명'] == '혜화서'])
         print('############### CCTV DF 생성 ###############')
         vo.fname = 'CCTV_in_Seoul'
-        cctv_file_name = reader.new_file(vo)
-        print(f'파일명: {crime_file_name}')
-        cctv_df = reader.csv(cctv_file_name)
+        cctv_df = reader.csv(reader.new_file(vo))
         cctv_df.rename(columns={cctv_df.columns[0]: '구별'}, inplace=True)
         vo.fname = 'population_in_Seoul'
-        population_file_name = reader.new_file(vo)
-        pop_df = reader.xls(population_file_name, 2, 'B, D, G, J, N')
+        pop_df = reader.xls(reader.new_file(vo), 2, 'B, D, G, J, N')
         pop_df.columns = ['구별', '인구수', '한국인', '외국인', '고령자']
         pop_df.drop([26], inplace=True)
         print('############### CCTV_POP DF 생성 ###############')
         cctv_pop_df = pd.merge(cctv_df, pop_df)
         cctv_pop_corr = cctv_pop_df.corr()
-        ic(cctv_pop_corr)
+        print(cctv_pop_corr)
         crime_df = crime_df.groupby('구별').sum()
         crime_df['총 범죄 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 발생$', case=False, regex=True)].sum(axis=1)
         crime_df['총 검거 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 검거$', case=False, regex=True)].sum(axis=1)
         crime_df['총 검거율'] = crime_df['총 검거 수'] / crime_df['총 범죄 수'] * 100
-        join = pd.merge(cctv_df.loc[:, ['구별', '소계']], crime_df.loc[:, '총 범죄 수':'총 검거율'], on='구별')
-        ic(join)
+        cctv_crime_df = pd.merge(cctv_df.loc[:, ['구별', '소계']], crime_df.loc[:, '총 범죄 수':'총 검거율'], on='구별')
+        cctv_crime_df.rename(columns={"소계":"CCTV총합"}, inplace=True)
+        print(cctv_crime_df.corr())
+        print('############### POLICE DF 생성 ###############')
+        police_df = pd.pivot_table(crime_df, index='구별', aggfunc=np.sum)
+        print(police_df)
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
