@@ -124,4 +124,5 @@ class Printer(PrinterBase):
         ic(this.head(3))
         ic(this.tail(3))
         print(this.info())
-        print(this.isnull().sum())
+        print('*' * 100)
+        print(f'!!!! Null Count is {this.isnull().sum()}')

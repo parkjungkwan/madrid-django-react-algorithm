@@ -15,6 +15,7 @@ class HousingService(object):
         self.vo.fname = 'admin/housing/data/housing.csv'
         self.model = self.vo.create_model()
 
+
     def housing_info(self):
         self.vo.model_info(self.model)
 
