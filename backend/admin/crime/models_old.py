@@ -79,7 +79,7 @@ class CrimeCctvModel():
         print('==================================================')
         print(f"샘플 중 혜화서 정보 : {crime[crime['관서명'] == '혜화서']}")
         print(f"샘플 중 금천서 정보 : {crime[crime['관서명'] == '금천서']}")
-        # crime.to_csv(vo.context+'new_data/police_positions.csv')
+        # crime.to_csv(vo.context+'new_data/crime_df.csv')
 
     def create_cctv_model(self) -> object:
         vo = self.vo
