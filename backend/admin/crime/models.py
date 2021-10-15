@@ -20,6 +20,7 @@ class Crime():
         reader = Reader()
         printer = Printer()
         vo.context = 'admin/crime/data/'
+        crime_titles = ['살인', '강도', '강간', '절도', '폭력']
         crime_columns = ['살인 발생', '강도 발생', '강간 발생', '절도 발생', '폭력 발생']  # Nominal
         arrest_columns = ['살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거']  # Nominal
         arrest_rate_columns = ['살인검거율', '강도검거율', '강간검거율', '절도검거율', '폭력검거율']  # Ratio
@@ -71,9 +72,8 @@ class Crime():
         police_df.drop(columns=dict(zip(arrest_columns,[])), axis=1, inplace=True)
         for i in arrest_rate_columns:
             police_df.loc[police_df[i] > 100, 1] = 100 # 데이터값 기간이 1년을 넘긴 경우가 있어서 100을 max 로 지정
-        vals = ['살인', '강도', '강간', '절도', '폭력']
-        keys = [f'{i} 발생' for i in vals]
-        columns = dict(zip(keys, vals))
+        keys = [f'{i} 발생' for i in crime_titles]
+        columns = dict(zip(keys, crime_titles))
         police_df.rename(columns=columns, inplace=True)
         x = police_df[arrest_rate_columns].values
         # from sklearn import preprocessing 추가
