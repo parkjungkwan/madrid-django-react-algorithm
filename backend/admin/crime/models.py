@@ -29,7 +29,7 @@ class Crime():
         vo.fname = 'crime_in_Seoul'
         crime_df = reader.csv(reader.new_file(vo))
         print('[2] crime_df 에 경찰서위치 추가 ')
-        self.crime_police(crime_df, reader, vo) #::: GOOGLE MAP
+        # self.crime_police(crime_df, reader, vo) #::: GOOGLE MAP
         vo.fname = 'new_data/crime_police'
         crime_df = reader.csv(reader.new_file(vo))
         print('[3] cctv_df CREATION ')
@@ -95,6 +95,26 @@ class Crime():
         temp = crime_df[arrest_columns] / crime_df[arrest_columns].max()
         crime_df['검거'] = np.sum(temp, axis=1)
         crime_police_tuple = tuple(zip(police_norm_df['구별'], police_norm_df['범죄']))
+        print('[8] folium CREATION ')
+        vo.fname = 'geo_simple'
+        state_geo = reader.json(reader.new_file(vo))
+        map = folium.Map(location=[37.5502, 126.982], zoom_start=12, title='Stamen Toner')
+
+        folium.Choropleth(
+            geo_data=state_geo,
+            name="choropleth",
+            data=crime_police_tuple,
+            columns=["Gu", "Crime Rate"],
+            key_on="feature.id",
+            fill_color="PuRd",
+            fill_opacity=0.7,
+            line_opacity=0.2,
+            legend_name="Crime Rate (%)",
+        ).add_to(map)
+
+        folium.LayerControl().add_to(map)
+
+        map.save(vo.context+'new_data/folium.html')
 
     def crime_police(self, crime_df, reader, vo):
         station_names = []
