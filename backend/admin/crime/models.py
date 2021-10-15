@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import pandas as pd
-
+from sklearn import preprocessing
 from admin.common.models import ValueObject, Printer, Reader
 from icecream import ic
 import numpy as np
@@ -78,7 +78,21 @@ class Crime():
             '강간 발생': '강간',
             '절도 발생': '절도',
             '폭력 발생': '폭력'
-        })
+        }, inplace=True)
+        x = police_df[arrest_rate_columns].values
+        # from sklearn import preprocessing 추가
+        min_max_scalar = preprocessing.MinMaxScaler()
+        # 스케일링은 선형변환을 적용하여 전체 자료의 분포를 평균 0, 분산 1이 되도록 만드는 과정
+        x_scaled = min_max_scalar.fit_transform(x.astype(float))
+        # 정규화 normalization
+        # 1. 빅데이터를 처리하면서 데이터의 범위(도메인)을 일치시킨다
+        # 2. 분포(스케일)을 유사하게 만든다
+        police_norm_df = pd.DataFrame(x_scaled, columns=crime_columns, index=police_df.index)
+        police_norm_df[arrest_rate_columns] = police_df[arrest_rate_columns]
+        police_norm_df['범죄'] = np.sum(police_norm_df[crime_columns], axis=1)
+        police_norm_df['검거'] = np.sum(police_norm_df[arrest_rate_columns], axis=1)
+        print(police_norm_df.columns)
+        # police_norm_df.to_csv(vo.context+'new_data/police_norm.csv')
             
         
 
