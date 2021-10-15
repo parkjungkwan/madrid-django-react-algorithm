@@ -68,7 +68,7 @@ class Crime():
             police_df[arrest_rate_columns[i]] = \
                 (police_df[arrest_columns[i]].astype(int) / police_df[j].astype(int)) * 100
 
-        police_df.drop(columns={'살인 검거', '강도 검거','강간 검거','절도 검거','폭력 검거'}, axis=1, inplace=True)
+        police_df.drop(columns=dict(zip(arrest_columns,[])), axis=1, inplace=True)
         for i in arrest_rate_columns:
             police_df.loc[police_df[i] > 100, 1] = 100 # 데이터값 기간이 1년을 넘긴 경우가 있어서 100을 max 로 지정
         vals = ['살인', '강도', '강간', '절도', '폭력']
