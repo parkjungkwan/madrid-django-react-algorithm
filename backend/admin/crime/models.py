@@ -1,10 +1,11 @@
 from datetime import datetime
-
+import folium
 import pandas as pd
 from sklearn import preprocessing
 from admin.common.models import ValueObject, Printer, Reader
 from icecream import ic
 import numpy as np
+import csv
 class Crime():
     def __init__(self):
         pass
@@ -28,7 +29,7 @@ class Crime():
         vo.fname = 'crime_in_Seoul'
         crime_df = reader.csv(reader.new_file(vo))
         print('[2] crime_df 에 경찰서위치 추가 ')
-        # self.crime_police(crime_df, reader, vo) ::: GOOGLE MAP
+        self.crime_police(crime_df, reader, vo) #::: GOOGLE MAP
         vo.fname = 'new_data/crime_police'
         crime_df = reader.csv(reader.new_file(vo))
         print('[3] cctv_df CREATION ')
@@ -89,9 +90,11 @@ class Crime():
         police_norm_df['범죄'] = np.sum(police_norm_df[crime_columns], axis=1)
         police_norm_df['검거'] = np.sum(police_norm_df[arrest_rate_columns], axis=1)
         police_norm_df.to_csv(vo.context+'new_data/police_norm.csv', sep=',', encoding='UTF-8')
-        print('[8] Seoul Map CREATION ')
-        vo.fname = 'geo_simple'
-        crime_df = reader.json(reader.new_file(vo))
+        police_norm_df = pd.read_csv(vo.context+'new_data/police_norm.csv')
+        print(police_norm_df.columns)
+        temp = crime_df[arrest_columns] / crime_df[arrest_columns].max()
+        crime_df['검거'] = np.sum(temp, axis=1)
+        crime_police_tuple = tuple(zip(police_norm_df['구별'], police_norm_df['범죄']))
 
     def crime_police(self, crime_df, reader, vo):
         station_names = []
@@ -107,6 +110,8 @@ class Crime():
             temp_loc = temp[0].get('geometry')
             station_lats.append(temp_loc['location']['lat'])
             station_lngs.append(temp_loc['location']['lng'])
+        crime_df['lat'] = station_lats
+        crime_df['lng'] = station_lngs
         gu_names = []
         for name in station_addrs:
             temp = name.split()
@@ -115,6 +120,13 @@ class Crime():
         crime_df['구별'] = gu_names
         print(crime_df[crime_df['관서명'] == '혜화서'])
         crime_df.to_csv(vo.context+'new_data/crime_police.csv')
+        dt = dict(zip(station_lats, station_lngs))
+        print(dt)
+        with open(vo.context+'new_data/with_save.csv', 'w', encoding='UTF-8') as f:
+            w = csv.writer(f)
+            w.writerow(dt.keys())
+            w.writerow(dt.values())
+
 
         
         
