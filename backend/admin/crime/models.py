@@ -20,8 +20,8 @@ class Crime():
         reader = Reader()
         printer = Printer()
         vo.context = 'admin/crime/data/'
-        crime_columns = ['살인발생', '강도발생', '강간발생', '절도발생', '폭력발생']  # Nominal
-        arrest_columns = ['살인검거', '강도검거', '강간검거', '절도검거', '폭력검거']  # Nominal
+        crime_columns = ['살인 발생', '강도 발생', '강간 발생', '절도 발생', '폭력 발생']  # Nominal
+        arrest_columns = ['살인 검거', '강도 검거', '강간 검거', '절도 검거', '폭력 검거']  # Nominal
         arrest_rate_columns = ['살인검거율', '강도검거율', '강간검거율', '절도검거율', '폭력검거율']  # Ratio
         print('[1] crime_df 생성 ')
         vo.fname = 'crime_in_Seoul'
@@ -64,21 +64,17 @@ class Crime():
          ['강간 검거', '강간 발생', '강도 검거', '강도 발생', '살인 검거', '살인 발생','절도 검거', 
          '절도 발생', '총검거수', '총검거율', '총범죄수', '폭력 검거', '폭력 발생']
         '''
-        police_df['살인검거율'] = (police_df['살인 검거'].astype(int) / police_df['살인 발생'].astype(int)) * 100
-        police_df['강도검거율'] = (police_df['강도 검거'].astype(int) / police_df['강도 발생'].astype(int)) * 100
-        police_df['강간검거율'] = (police_df['강간 검거'].astype(int) / police_df['강간 발생'].astype(int)) * 100
-        police_df['절도검거율'] = (police_df['절도 검거'].astype(int) / police_df['절도 발생'].astype(int)) * 100
-        police_df['폭력검거율'] = (police_df['폭력 검거'].astype(int) / police_df['폭력 발생'].astype(int)) * 100
+        for i, j in enumerate(crime_columns):
+            police_df[arrest_rate_columns[i]] = \
+                (police_df[arrest_columns[i]].astype(int) / police_df[j].astype(int)) * 100
+
         police_df.drop(columns={'살인 검거', '강도 검거','강간 검거','절도 검거','폭력 검거'}, axis=1, inplace=True)
         for i in arrest_rate_columns:
             police_df.loc[police_df[i] > 100, 1] = 100 # 데이터값 기간이 1년을 넘긴 경우가 있어서 100을 max 로 지정
-        police_df.rename(columns={
-            '살인 발생': '살인',
-            '강도 발생': '강도',
-            '강간 발생': '강간',
-            '절도 발생': '절도',
-            '폭력 발생': '폭력'
-        }, inplace=True)
+        vals = ['살인', '강도', '강간', '절도', '폭력']
+        keys = [f'{i} 발생' for i in vals]
+        columns = dict(zip(keys, vals))
+        police_df.rename(columns=columns, inplace=True)
         x = police_df[arrest_rate_columns].values
         # from sklearn import preprocessing 추가
         min_max_scalar = preprocessing.MinMaxScaler()
@@ -87,13 +83,15 @@ class Crime():
         # 정규화 normalization
         # 1. 빅데이터를 처리하면서 데이터의 범위(도메인)을 일치시킨다
         # 2. 분포(스케일)을 유사하게 만든다
+        print('[7] police_norm_df CREATION ')
         police_norm_df = pd.DataFrame(x_scaled, columns=crime_columns, index=police_df.index)
         police_norm_df[arrest_rate_columns] = police_df[arrest_rate_columns]
         police_norm_df['범죄'] = np.sum(police_norm_df[crime_columns], axis=1)
         police_norm_df['검거'] = np.sum(police_norm_df[arrest_rate_columns], axis=1)
-        police_norm_df.to_csv(vo.context+'new_data/police_norm.csv')
-            
-        
+        police_norm_df.to_csv(vo.context+'new_data/police_norm.csv', sep=',', encoding='UTF-8')
+        print('[8] Seoul Map CREATION ')
+        vo.fname = 'geo_simple'
+        crime_df = reader.json(reader.new_file(vo))
 
     def crime_police(self, crime_df, reader, vo):
         station_names = []
