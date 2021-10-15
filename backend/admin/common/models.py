@@ -4,9 +4,7 @@ from icecream import ic
 import pandas as pd
 import json
 import googlemaps
-'''
 
-'''
 
 @dataclass
 class ValueObject(object):
