@@ -27,7 +27,7 @@ class Crime():
         vo.fname = 'crime_in_Seoul'
         crime_df = reader.csv(reader.new_file(vo))
         print('[2] crime_df 에 경찰서위치 추가 ')
-        # self.crime_police(crime_df, reader, vo)
+        # self.crime_police(crime_df, reader, vo) ::: GOOGLE MAP
         vo.fname = 'new_data/crime_police'
         crime_df = reader.csv(reader.new_file(vo))
         print('[3] cctv_df CREATION ')
@@ -43,16 +43,44 @@ class Crime():
         cctv_pop_df = pd.merge(cctv_df, pop_df)
         cctv_pop_corr = cctv_pop_df.corr()
         print(cctv_pop_corr)
+        '''
+        CCTV와 상관계수: 한국인 0.3, 외국인 0, 고령자 0.2   
+        '''
         crime_df = crime_df.groupby('구별').sum()
-        crime_df['총 범죄 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 발생$', case=False, regex=True)].sum(axis=1)
-        crime_df['총 검거 수'] = crime_df.loc[:, crime_df.columns.str.contains(' 검거$', case=False, regex=True)].sum(axis=1)
-        crime_df['총 검거율'] = crime_df['총 검거 수'] / crime_df['총 범죄 수'] * 100
-        cctv_crime_df = pd.merge(cctv_df.loc[:, ['구별', '소계']], crime_df.loc[:, '총 범죄 수':'총 검거율'], on='구별')
+        crime_df['총범죄수'] = crime_df.loc[:, crime_df.columns.str.contains(' 발생$', case=False, regex=True)].sum(axis=1)
+        crime_df['총검거수'] = crime_df.loc[:, crime_df.columns.str.contains(' 검거$', case=False, regex=True)].sum(axis=1)
+        crime_df['총검거율'] = crime_df['총검거수'] / crime_df['총범죄수'] * 100
+        cctv_crime_df = pd.merge(cctv_df.loc[:, ['구별', '소계']], crime_df.loc[:, '총범죄수':'총검거율'], on='구별')
         cctv_crime_df.rename(columns={"소계":"CCTV총합"}, inplace=True)
         print(cctv_crime_df.corr())
+        '''
+        CCTV와 상관계수: 범죄수 0.47, 검거수 0.52 
+        '''
         print('[6] police_df CREATION ')
         police_df = pd.pivot_table(crime_df, index='구별', aggfunc=np.sum)
         print(police_df)
+        print(f'경찰서DF 컬럼: {police_df.columns}')
+        '''
+         ['강간 검거', '강간 발생', '강도 검거', '강도 발생', '살인 검거', '살인 발생','절도 검거', 
+         '절도 발생', '총검거수', '총검거율', '총범죄수', '폭력 검거', '폭력 발생']
+        '''
+        police_df['살인검거율'] = (police_df['살인 검거'].astype(int) / police_df['살인 발생'].astype(int)) * 100
+        police_df['강도검거율'] = (police_df['강도 검거'].astype(int) / police_df['강도 발생'].astype(int)) * 100
+        police_df['강간검거율'] = (police_df['강간 검거'].astype(int) / police_df['강간 발생'].astype(int)) * 100
+        police_df['절도검거율'] = (police_df['절도 검거'].astype(int) / police_df['절도 발생'].astype(int)) * 100
+        police_df['폭력검거율'] = (police_df['폭력 검거'].astype(int) / police_df['폭력 발생'].astype(int)) * 100
+        police_df.drop(columns={'살인 검거', '강도 검거','강간 검거','절도 검거','폭력 검거'}, axis=1, inplace=True)
+        for i in arrest_rate_columns:
+            police_df.loc[police_df[i] > 100, 1] = 100 # 데이터값 기간이 1년을 넘긴 경우가 있어서 100을 max 로 지정
+        police_df.rename(columns={
+            '살인 발생': '살인',
+            '강도 발생': '강도',
+            '강간 발생': '강간',
+            '절도 발생': '절도',
+            '폭력 발생': '폭력'
+        })
+            
+        
 
     def crime_police(self, crime_df, reader, vo):
         station_names = []
