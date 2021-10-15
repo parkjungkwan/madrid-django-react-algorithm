@@ -138,7 +138,9 @@ class Crime():
             gu_name = [gu for gu in temp if gu[-1] == '구'][0]
             gu_names.append(gu_name)
         crime_df['구별'] = gu_names
-        print(crime_df[crime_df['관서명'] == '혜화서'])
+        crime_df.loc[19,'구별'] = '강서구'
+        print(crime_df[crime_df['관서명'] == '강서서'])
+
         crime_df.to_csv(vo.context+'new_data/crime_police.csv')
         dt = dict(zip(station_lats, station_lngs))
         print(dt)
