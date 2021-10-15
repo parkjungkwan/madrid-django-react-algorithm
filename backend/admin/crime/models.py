@@ -91,8 +91,7 @@ class Crime():
         police_norm_df[arrest_rate_columns] = police_df[arrest_rate_columns]
         police_norm_df['범죄'] = np.sum(police_norm_df[crime_columns], axis=1)
         police_norm_df['검거'] = np.sum(police_norm_df[arrest_rate_columns], axis=1)
-        print(police_norm_df.columns)
-        # police_norm_df.to_csv(vo.context+'new_data/police_norm.csv')
+        police_norm_df.to_csv(vo.context+'new_data/police_norm.csv')
             
         
 
