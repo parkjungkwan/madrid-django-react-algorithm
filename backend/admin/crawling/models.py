@@ -30,6 +30,8 @@ class Crawling(object):
 
     def samsung_report(self, vo):
         okt = Okt()
+        daddy_bag = okt.pos('아버지 가방에 들어가신다', norm=True, stem=True)
+        print(f':::::::: {datetime.now()} ::::::::\n {daddy_bag}')
         okt.pos("삼성전자 글로벌센터 전자사업부", stem=True)
         filename = f'{vo.context}kr-Report_2018.txt'
         with open(filename, 'r', encoding='utf-8') as f:
@@ -56,8 +58,15 @@ class Crawling(object):
         stopwords = stopwords.split(' ')
         texts_without_stopwords = [text for text in tokens if text not in stopwords]
         # print(f':::::::: {datetime.now()} ::::::::\n {texts_without_stopwords[:10]}')
-        freqtxt = pd.Series(dict(FreqDist(texts_without_stopwords))).sort_values(ascending=False)
-        print(f':::::::: {datetime.now()} ::::::::\n {freqtxt[:30]}')
+        freq_texts = pd.Series(dict(FreqDist(texts_without_stopwords))).sort_values(ascending=False)
+        # print(f':::::::: {datetime.now()} ::::::::\n {freq_texts[:30]}')
+        wcloud = WordCloud(f'{vo.context}D2Coding.ttf', relative_scaling=0.2,
+                           background_color='white').generate(' '.join(texts_without_stopwords))
+        plt.figure(figsize=(12,12))
+        plt.imshow(wcloud, interpolation='bilinear')
+        plt.axis('off')
+        plt.savefig(f'{vo.context}wcloud.png')
+
 
     def naver_movie(self):
 
