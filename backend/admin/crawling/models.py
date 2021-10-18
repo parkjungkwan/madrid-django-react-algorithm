@@ -17,20 +17,35 @@ class Crawling(object):
         pass
 
     def process(self):
-        nltk.download()
+        # nltk.download()
         vo = ValueObject()
         vo.context = 'admin/crawling/data/'
         # self.naver_movie()
         # self.tweet_trump()
-        # self.samsung_report(vo)
+        self.samsung_report(vo)
 
     def samsung_report(self, vo):
+        from konlpy.tag import Okt
         okt = Okt()
         okt.pos('삼성전자 글로벌센터 전자사업부', stem=True)
-        vo.fname = 'kr-Report_2018.txt'
-        with open(vo.fname,'r',encoding='UTF-8') as f:
+        with open('admin/crawling/data/kr-Report_2018.txt','r',
+                  encoding='UTF-8') as f:
             texts = f.read()
+        # print(texts)
+        temp = texts.replace('\n', ' ')
+        tokenizer = re.compile(r'[^ ㄱ-힣]+')
+        temp = tokenizer.sub('', temp)
+        tokens = word_tokenize(temp)
+        noun_tokens = []
+        for i in tokens:
+            token_pos = okt.pos(i)
+            temp = [txt_tag[0] for txt_tag in token_pos if txt_tag[1] == 'Noun']
+            if len(''.join(temp)) > 1:
+                noun_tokens.append(''.join(temp))
+        texts = ' '.join(noun_tokens)
         print(texts)
+
+
 
 
 
