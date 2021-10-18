@@ -56,7 +56,9 @@ class Crawling(object):
         with open(stopfile, 'r', encoding='utf-8') as f:
             stopwords = f.read()
         stopwords = stopwords.split(' ')
+        stopwords.extend(['용량','각주','가능보고서','고려','전세계','릴루미노','가치창'])
         texts_without_stopwords = [text for text in tokens if text not in stopwords]
+
         # print(f':::::::: {datetime.now()} ::::::::\n {texts_without_stopwords[:10]}')
         freq_texts = pd.Series(dict(FreqDist(texts_without_stopwords))).sort_values(ascending=False)
         # print(f':::::::: {datetime.now()} ::::::::\n {freq_texts[:30]}')
