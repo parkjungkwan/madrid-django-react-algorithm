@@ -24,7 +24,7 @@ class FashionClassification(object):
         arr = self.predict()
         self.plot_image()
         self.plot_value_array()
-        plt.savefig(f'{self.vo.context}fashion_random.png')
+
 
 
     def get_data(self) -> []:
@@ -38,7 +38,7 @@ class FashionClassification(object):
         plt.imshow(X_train_full[3])
         plt.colorbar()
         plt.grid(False)
-        plt.show
+        plt.savefig(f'{self.vo.context}fashion_random.png')
 
         return [X_train_full, y_train_full, X_test, y_test]
 
