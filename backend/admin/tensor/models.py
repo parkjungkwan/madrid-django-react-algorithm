@@ -14,21 +14,34 @@ class FashionClassification(object):
                            'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
     def fashion(self):
-        self.get_data()
+        self.hook()
 
     def hook(self):
-        images = self.get_data()
+        ls = self.get_data()
         model = self.create_model()
-        model = self.train_model()
+        model = self.train_model(model,ls[0],ls[1])
         self.test_model(model)
-        arr = self.predict()
+        arr = self.predict(model, ls[2], ls[3], 0)
+        prediction = arr[0]
+        test_images = arr[1]
+        test_labels = arr[2]
+        i = 5
+        print(f'예측값: {prediction}')
+        print(f'테스트 이미지: {prediction}')
+        print(f'테스트 값: {prediction}')
+        '''
+        plt.figure(figsize=(6,3))
+        plt.subplot(1,2,1)
+        
+        plt.grid(False)
+        plt.savefig(f'{self.vo.context}fashion_random.png')
         self.plot_image()
         self.plot_value_array()
-
+        '''
     def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
         (X_train_full, y_train_full),(X_test, y_test) = fashion_mnist.load_data()
-        self.peek_datas(X_train_full, X_test, y_train_full)
+        # self.peek_datas(X_train_full, X_test, y_train_full)
         return [X_train_full, y_train_full, X_test, y_test]
 
     def peek_datas(self, train_images, test_images, train_labels):
@@ -51,19 +64,33 @@ class FashionClassification(object):
             plt.xlabel(self.class_name[train_labels[i]])
         plt.savefig(f'{self.vo.context}fashion_subplot.png')
 
-
-
     def create_model(self) -> object:
-        pass
+        model = keras.Sequential([
+            keras.layers.Flatten(input_shape=[28, 28]),
+            keras.layers.Dense(128, activation="relu"), # neron count 128
+            keras.layers.Dense(10, activation="softmax") # 출력층 활성화함수는 softmax
+        ])
+        model.compile(optmizer = 'adam',
+                      loss='sparse_categorical_crossentropy',
+                      metrics=['accuracy'])
+        return model
 
-    def train_model(self) -> object:
-        pass
+    def train_model(self, model, train_images, train_labels) -> object:
+        model.fit(train_images, train_labels, epoch=5)
+        return model
 
-    def test_model(self) -> object:
-        pass
+    def test_model(self, model, test_images, test_labels) -> object:
+        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
+        # verbose 는 학습하는 내부상황 보기 중 2번선택
+        print(f'테스트 정확도: {test_acc}')
 
-    def predict(self):
-        pass
+    def predict(self, model, test_images, test_labels, index):
+        prediction = model.predict(test_images)
+        pred = prediction[index]
+        answer = test_labels[index]
+        print(f'모델이 예측한 값 {np.argmax(pred)}')
+        print(f'정답: {answer}')
+        return [prediction, test_images, test_labels]
 
     def plot_image(self):
         pass
