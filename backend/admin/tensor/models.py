@@ -13,7 +13,7 @@ class FashionClassification(object):
         self.class_name = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                            'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
-    def process(self):
+    def fashion(self):
         self.get_data()
 
     def hook(self):
@@ -24,8 +24,6 @@ class FashionClassification(object):
         arr = self.predict()
         self.plot_image()
         self.plot_value_array()
-
-
 
     def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
@@ -39,7 +37,6 @@ class FashionClassification(object):
         plt.colorbar()
         plt.grid(False)
         plt.savefig(f'{self.vo.context}fashion_random.png')
-
         return [X_train_full, y_train_full, X_test, y_test]
 
     def preprocess(self):
