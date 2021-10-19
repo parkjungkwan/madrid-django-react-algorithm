@@ -28,19 +28,30 @@ class FashionClassification(object):
     def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
         (X_train_full, y_train_full),(X_test, y_test) = fashion_mnist.load_data()
-        print(X_train_full.shape)
-        print(X_train_full.dtype)
-        print(f'훈련 행: {X_train_full.shape[0]} 열: {X_train_full.shape[1]}')
-        print(f'테스트 행: {X_test.shape[0]} 열: {X_test.shape[1]}')
+        self.peek_datas(X_train_full, X_test, y_train_full)
+        return [X_train_full, y_train_full, X_test, y_test]
+
+    def peek_datas(self, train_images, test_images, train_labels):
+        print(train_images.shape)
+        print(train_images.dtype)
+        print(f'훈련 행: {train_images.shape[0]} 열: {train_images.shape[1]}')
+        print(f'테스트 행: {test_images.shape[0]} 열: {test_images.shape[1]}')
         plt.figure()
-        plt.imshow(X_train_full[3])
+        plt.imshow(train_images[3])
         plt.colorbar()
         plt.grid(False)
         plt.savefig(f'{self.vo.context}fashion_random.png')
-        return [X_train_full, y_train_full, X_test, y_test]
+        plt.figure(figsize=(10, 10))
+        for i in range(25):
+            plt.subplot(5,5,i+1)
+            plt.xticks([])
+            plt.yticks([])
+            plt.grid(False)
+            plt.imshow(train_images[i], cmap=plt.cm.binary)
+            plt.xlabel(self.class_name[train_labels[i]])
+        plt.savefig(f'{self.vo.context}fashion_subplot.png')
 
-    def preprocess(self):
-        pass
+
 
     def create_model(self) -> object:
         pass
