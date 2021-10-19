@@ -10,39 +10,53 @@ class FashionClassification(object):
     def __init__(self):
         self.vo = ValueObject()
         self.vo.context = 'admin/tensor/data/'
-        self.class_name = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
+        self.class_names = ['T-shirt/top', 'Trouser', 'Pullover', 'Dress', 'Coat',
                            'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
     def fashion(self):
         self.hook()
 
     def hook(self):
-        ls = self.get_data()
+        [train_images, train_labels, test_images, test_labels] = self.get_data()
         model = self.create_model()
-        model = self.train_model(model,ls[0],ls[1])
-        self.test_model(model)
-        arr = self.predict(model, ls[2], ls[3], 0)
-        prediction = arr[0]
-        test_images = arr[1]
-        test_labels = arr[2]
+        model.fit(train_images, train_labels, epochs=5)
+        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
+        # verbose 는 학습하는 내부상황 보기 중 2번선택
+        print(f'테스트 정확도: {test_acc}')
         i = 5
-        print(f'예측값: {prediction}')
-        print(f'테스트 이미지: {prediction}')
-        print(f'테스트 값: {prediction}')
-        '''
+        predictions = model.predict(test_images)
+        pred = predictions[i]
+        answer = test_labels[i]
+        print(f'모델이 예측한 값 {np.argmax(pred)}')
+        print(f'정답: {answer}')
+
         plt.figure(figsize=(6,3))
         plt.subplot(1,2,1)
-        
+        prediction_array, true_label, image = predictions[i], test_labels[i], test_images[i]
         plt.grid(False)
-        plt.savefig(f'{self.vo.context}fashion_random.png')
-        self.plot_image()
-        self.plot_value_array()
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(image, cmap=plt.cm.binary)
+        prediction_label = np.argmax(predictions)
+        print('f{prediction_label}')
+        print('#'*100)
+        print('f{true_label}')
         '''
+        if prediction_label == true_label:
+            color = 'blue'
+        else:
+            color = 'red'
+        plt.xlabel('{} : {}%'.format(self.class_names[prediction_label],
+                                     100 * np.max(prediction_array),
+                                     self.class_names[true_label], color))
+        plt.savefig(f'{self.vo.context}fashion_random.png')
+        '''
+
     def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
-        (X_train_full, y_train_full),(X_test, y_test) = fashion_mnist.load_data()
-        # self.peek_datas(X_train_full, X_test, y_train_full)
-        return [X_train_full, y_train_full, X_test, y_test]
+        (train_images, train_labels),(test_images, test_labels) = fashion_mnist.load_data()
+        # self.peek_datas(train_images, test_images, test_labels)
+        return [train_images, train_labels, test_images, test_labels]
 
     def peek_datas(self, train_images, test_images, train_labels):
         print(train_images.shape)
@@ -70,33 +84,15 @@ class FashionClassification(object):
             keras.layers.Dense(128, activation="relu"), # neron count 128
             keras.layers.Dense(10, activation="softmax") # 출력층 활성화함수는 softmax
         ])
-        model.compile(optmizer = 'adam',
+        model.compile(optimizer = 'adam',
                       loss='sparse_categorical_crossentropy',
                       metrics=['accuracy'])
         return model
 
-    def train_model(self, model, train_images, train_labels) -> object:
-        model.fit(train_images, train_labels, epoch=5)
-        return model
 
-    def test_model(self, model, test_images, test_labels) -> object:
-        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
-        # verbose 는 학습하는 내부상황 보기 중 2번선택
-        print(f'테스트 정확도: {test_acc}')
 
-    def predict(self, model, test_images, test_labels, index):
-        prediction = model.predict(test_images)
-        pred = prediction[index]
-        answer = test_labels[index]
-        print(f'모델이 예측한 값 {np.argmax(pred)}')
-        print(f'정답: {answer}')
-        return [prediction, test_images, test_labels]
 
-    def plot_image(self):
-        pass
 
-    def plot_value_array(self):
-        pass
 
 class AdalineGD(object): # 적응형 선형 뉴런 분류기
 
