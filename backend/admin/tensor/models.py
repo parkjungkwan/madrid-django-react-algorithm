@@ -2,7 +2,6 @@ import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
-
 from admin.common.models import ValueObject
 
 
@@ -14,55 +13,22 @@ class FashionClassification(object):
                            'Sandal', 'Shirt', 'Sneaker', 'Bag', 'Ankle boot']
 
     def fashion(self):
-        self.hook()
-
-    def hook(self):
-        [train_images, train_labels, test_images, test_labels] = self.get_data()
-        model = self.create_model()
-        model.fit(train_images, train_labels, epochs=5)
-        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2) # verbose 는 학습하는 내부상황 보기 중 2번선택
-        predictions = model.predict(test_images)
-        i = 5
-        print(f'모델이 예측한 값 {np.argmax(predictions[i])}')
-        print(f'정답: {test_labels[i]}')
-        print(f'테스트 정확도: {test_acc}')
-        plt.figure(figsize=(6,3))
-        plt.subplot(1,2,1)
-        test_image, test_predictions, test_label = test_images[i], predictions[i], test_labels[i]
-        plt.grid(False)
-        plt.xticks([])
-        plt.yticks([])
-        plt.imshow(test_image, cmap=plt.cm.binary)
-        test_pred = np.argmax(test_predictions)
-        print(f'{test_pred}')
-        print('#'*100)
-        print(f'{test_label}')
-
-        if test_pred == test_label:
-            color = 'blue'
-        else:
-            color = 'red'
-        plt.xlabel('{} : {} %'.format(self.class_names[test_pred],
-                                     100 * np.max(test_predictions),
-                                     self.class_names[test_label], color))
-        plt.subplot(1, 2, 2)
-        plt.grid(False)
-        plt.xticks([])
-        plt.yticks([])
-        this_plot = plt.bar(range(10), test_pred, color='#777777')
-        plt.ylim([0,1])
-        test_pred = np.argmax(test_predictions)
-        this_plot[test_pred].set_color('red')
-        this_plot[test_label].set_color('blue')
-        plt.savefig(f'{self.vo.context}fashion_answer.png')
-
-
-
-    def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
-        (train_images, train_labels),(test_images, test_labels) = fashion_mnist.load_data()
+        (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
         # self.peek_datas(train_images, test_images, test_labels)
-        return [train_images, train_labels, test_images, test_labels]
+        model = keras.Sequential([
+            keras.layers.Flatten(input_shape=[28, 28]),
+            keras.layers.Dense(128, activation="relu"),  # neron count 128
+            keras.layers.Dense(10, activation="softmax")  # 출력층 활성화함수는 softmax
+        ])
+        model.compile(optimizer='adam',
+                      loss='sparse_categorical_crossentropy',
+                      metrics=['accuracy'])
+        model.fit(train_images, train_labels, epochs=5)
+        # self.test_and_save_images(model, test_images, test_labels)
+        model.save(f'{self.vo.context}fashion_classification.h5')
+
+
 
     def peek_datas(self, train_images, test_images, train_labels):
         print(train_images.shape)
@@ -84,20 +50,39 @@ class FashionClassification(object):
             plt.xlabel(self.class_name[train_labels[i]])
         plt.savefig(f'{self.vo.context}fashion_subplot.png')
 
-    def create_model(self) -> object:
-        model = keras.Sequential([
-            keras.layers.Flatten(input_shape=[28, 28]),
-            keras.layers.Dense(128, activation="relu"), # neron count 128
-            keras.layers.Dense(10, activation="softmax") # 출력층 활성화함수는 softmax
-        ])
-        model.compile(optimizer = 'adam',
-                      loss='sparse_categorical_crossentropy',
-                      metrics=['accuracy'])
-        return model
+    def test_and_save_images(self, model, test_images, test_labels):
+        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)  # verbose 는 학습하는 내부상황 보기 중 2번선택
+        predictions = model.predict(test_images)
+        i = 5
+        print(f'모델이 예측한 값 {np.argmax(predictions[i])}')
+        print(f'정답: {test_labels[i]}')
+        print(f'테스트 정확도: {test_acc}')
+        plt.figure(figsize=(6, 3))
+        plt.subplot(1, 2, 1)
+        test_image, test_predictions, test_label = test_images[i], predictions[i], test_labels[i]
+        plt.grid(False)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(test_image, cmap=plt.cm.binary)
+        test_pred = np.argmax(test_predictions)
 
-
-
-
+        if test_pred == test_label:
+            color = 'blue'
+        else:
+            color = 'red'
+        plt.xlabel('{} : {} %'.format(self.class_names[test_pred],
+                                      100 * np.max(test_predictions),
+                                      self.class_names[test_label], color))
+        plt.subplot(1, 2, 2)
+        plt.grid(False)
+        plt.xticks([])
+        plt.yticks([])
+        this_plot = plt.bar(range(10), test_pred, color='#777777')
+        plt.ylim([0, 1])
+        test_pred = np.argmax(test_predictions)
+        this_plot[test_pred].set_color('red')
+        this_plot[test_label].set_color('blue')
+        plt.savefig(f'{self.vo.context}fashion_answer2.png')
 
 
 class AdalineGD(object): # 적응형 선형 뉴런 분류기
