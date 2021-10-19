@@ -20,37 +20,43 @@ class FashionClassification(object):
         [train_images, train_labels, test_images, test_labels] = self.get_data()
         model = self.create_model()
         model.fit(train_images, train_labels, epochs=5)
-        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2)
-        # verbose 는 학습하는 내부상황 보기 중 2번선택
-        print(f'테스트 정확도: {test_acc}')
-        i = 5
+        test_loss, test_acc = model.evaluate(test_images, test_labels, verbose=2) # verbose 는 학습하는 내부상황 보기 중 2번선택
         predictions = model.predict(test_images)
-        pred = predictions[i]
-        answer = test_labels[i]
-        print(f'모델이 예측한 값 {np.argmax(pred)}')
-        print(f'정답: {answer}')
-
+        i = 5
+        print(f'모델이 예측한 값 {np.argmax(predictions[i])}')
+        print(f'정답: {test_labels[i]}')
+        print(f'테스트 정확도: {test_acc}')
         plt.figure(figsize=(6,3))
         plt.subplot(1,2,1)
-        prediction_array, true_label, image = predictions[i], test_labels[i], test_images[i]
+        test_image, test_predictions, test_label = test_images[i], predictions[i], test_labels[i]
         plt.grid(False)
         plt.xticks([])
         plt.yticks([])
-        plt.imshow(image, cmap=plt.cm.binary)
-        prediction_label = np.argmax(predictions)
-        print('f{prediction_label}')
+        plt.imshow(test_image, cmap=plt.cm.binary)
+        test_pred = np.argmax(test_predictions)
+        print(f'{test_pred}')
         print('#'*100)
-        print('f{true_label}')
-        '''
-        if prediction_label == true_label:
+        print(f'{test_label}')
+
+        if test_pred == test_label:
             color = 'blue'
         else:
             color = 'red'
-        plt.xlabel('{} : {}%'.format(self.class_names[prediction_label],
-                                     100 * np.max(prediction_array),
-                                     self.class_names[true_label], color))
-        plt.savefig(f'{self.vo.context}fashion_random.png')
-        '''
+        plt.xlabel('{} : {} %'.format(self.class_names[test_pred],
+                                     100 * np.max(test_predictions),
+                                     self.class_names[test_label], color))
+        plt.subplot(1, 2, 2)
+        plt.grid(False)
+        plt.xticks([])
+        plt.yticks([])
+        this_plot = plt.bar(range(10), test_pred, color='#777777')
+        plt.ylim([0,1])
+        test_pred = np.argmax(test_predictions)
+        this_plot[test_pred].set_color('red')
+        this_plot[test_label].set_color('blue')
+        plt.savefig(f'{self.vo.context}fashion_answer.png')
+
+
 
     def get_data(self) -> []:
         fashion_mnist = keras.datasets.fashion_mnist
