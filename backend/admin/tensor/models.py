@@ -10,19 +10,44 @@ class TensorFunction(object):
         self.vo.context = 'admin/tensor/data/'
 
     def hook(self):
-        # self.tf_function()
-        self.decorator_example()
+        menu = 'tf_sum'
+        if menu =='tf_function':
+            # result = self.tf_function()
+            pass
+            """
+            결과: [0.]]]]), array([6, 7, 1, 4, 7, 5, 4, 3, 5, 8, 0, 
+                                2, 9, 4, 5, 0, 5, 4, 9, 9, 2, 4, 
+                                7, 2, 2, 5, 5, 3, 9, 6, 5, 0], dtype=uint8)), (array([[[[0.],
+            """
+        elif menu == 'tf_sum':
+            result = self.tf_sum() # 결과: 6.0
+        elif menu == 'tf_add':
+            result = self.tf_add()
+        else:
+            result = '해당사항 없음'
+        print(f'결과: {result}')
+
 
     @tf.function
-    def decorator_example(self):
-        a = tf.constant(1)
-        b = tf.constant(2)
-        c = tf.constant(3)
+    def tf_sum(self):
+        a = tf.constant(1, tf.float32)
+        b = tf.constant(2, tf.float32)
+        c = tf.constant(3, tf.float32)
         z = a + b + c
-        print(f'@tf.function 사용하기: {z}')
-        # @tf.function 사용하기: Tensor("add_1:0", shape=(), dtype=int32)
         return z
+        '''
+        Tensor("Add:0", shape=(5,), dtype=int32)
+        '''
+        # x = [1, 2, 3, 4, 5]
+        # y = tf.constant([1, 2, 3, 4, 5])
+        # z = tf.add(x, y)
 
+
+    def tf_add(self):
+        x = [1, 2, 3, 4, 5]
+        y = 2
+        z = tf.add(x, y)
+        return z
 
     def tf_function(self):
         mnist = tf.keras.datasets.mnist
@@ -34,7 +59,10 @@ class TensorFunction(object):
             (X_train, y_train)
         ).shuffle(10000).batch(32)
         test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(32)
-        print(f'train_ds : {type(train_ds)}')
+        #  <BatchDataset shapes: ((None, 28, 28, 1), (None,)), types: (tf.float64, tf.uint8)>
+        # return train_ds
+        return list(train_ds.as_numpy_iterator())
+
         '''
         train_ds : <class 'tensorflow.python.data.ops.dataset_ops.BatchDataset'>
         '''

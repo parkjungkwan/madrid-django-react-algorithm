@@ -19,5 +19,6 @@ def fashion(request):
 @api_view(['GET'])
 @parser_classes([JSONParser])
 def hook(request):
+    print('>>>>>>>>>>>>>>')
     TensorFunction().hook()
     return JsonResponse({'Tensor Hook ': 'SUCCESS'})
