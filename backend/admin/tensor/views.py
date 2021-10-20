@@ -15,3 +15,9 @@ def calculator(request):
 def fashion(request):
     FashionClassification().fashion()
     return JsonResponse({'Fashion Classification ': 'SUCCESS'})
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def fashion(request):
+    FashionClassification().fashion()
+    return JsonResponse({'Fashion Classification ': 'SUCCESS'})

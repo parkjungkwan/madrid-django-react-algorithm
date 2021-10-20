@@ -4,6 +4,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 from admin.common.models import ValueObject
 
+class TensorFunction(object):
+    def __init__(self):
+        pass
+
+    def tf_function(self):
+        mnist = tf.keras.datasets.mnist
+        (X_train, y_train), (X_test, y_test) = mnist.load_data()
+        X_train, X_test = X_train / 255.0, X_test /255.0
+        X_train = X_train[..., tf.newaxis] # 차원 추가
+        X_test =  X_test[..., tf.newaxis]
+        train_ds = tf.data.Dataset.from_tensor_slices(
+            (X_train, y_train)
+        ).shuffle(10000).batch(32)
+        test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(32)
+        plt.figure(figsize=(10, 10))
+        plt.grid(False)
+        plt.imshow(train_ds[3])
+        plt.savefig(f'{self.vo.context}train_ds.png')
+        plt.imshow(test_ds[3])
+        plt.savefig(f'{self.vo.context}test_ds.png')
+
 
 class FashionClassification(object):
     def __init__(self):
@@ -27,6 +48,7 @@ class FashionClassification(object):
         model.fit(train_images, train_labels, epochs=5)
         # self.test_and_save_images(model, test_images, test_labels)
         model.save(f'{self.vo.context}fashion_classification.h5')
+        # model = keras.models.load_model(f'{self.vo.context}fashion_classification.h5')
 
 
 
