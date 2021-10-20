@@ -9,6 +9,21 @@ class TensorFunction(object):
         self.vo = ValueObject()
         self.vo.context = 'admin/tensor/data/'
 
+    def hook(self):
+        # self.tf_function()
+        self.decorator_example()
+
+    @tf.function
+    def decorator_example(self):
+        a = tf.constant(1)
+        b = tf.constant(2)
+        c = tf.constant(3)
+        z = a + b + c
+        print(f'@tf.function 사용하기: {z}')
+        # @tf.function 사용하기: Tensor("add_1:0", shape=(), dtype=int32)
+        return z
+
+
     def tf_function(self):
         mnist = tf.keras.datasets.mnist
         (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -23,7 +38,8 @@ class TensorFunction(object):
         '''
         train_ds : <class 'tensorflow.python.data.ops.dataset_ops.BatchDataset'>
         '''
-        print(list(train_ds.as_numpy_iterator()))
+        # print(list(train_ds.as_numpy_iterator()))
+
 
 
 class FashionClassification(object):

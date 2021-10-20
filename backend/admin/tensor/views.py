@@ -18,6 +18,6 @@ def fashion(request):
 
 @api_view(['GET'])
 @parser_classes([JSONParser])
-def tf_function(request):
-    TensorFunction().tf_function()
-    return JsonResponse({'Tensor Function ': 'SUCCESS'})
+def hook(request):
+    TensorFunction().hook()
+    return JsonResponse({'Tensor Hook ': 'SUCCESS'})
