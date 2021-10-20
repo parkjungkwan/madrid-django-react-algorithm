@@ -6,7 +6,8 @@ from admin.common.models import ValueObject
 
 class TensorFunction(object):
     def __init__(self):
-        pass
+        self.vo = ValueObject()
+        self.vo.context = 'admin/tensor/data/'
 
     def tf_function(self):
         mnist = tf.keras.datasets.mnist
@@ -18,12 +19,11 @@ class TensorFunction(object):
             (X_train, y_train)
         ).shuffle(10000).batch(32)
         test_ds = tf.data.Dataset.from_tensor_slices((X_test, y_test)).batch(32)
-        plt.figure(figsize=(10, 10))
-        plt.grid(False)
-        plt.imshow(train_ds[3])
-        plt.savefig(f'{self.vo.context}train_ds.png')
-        plt.imshow(test_ds[3])
-        plt.savefig(f'{self.vo.context}test_ds.png')
+        print(f'train_ds : {type(train_ds)}')
+        '''
+        train_ds : <class 'tensorflow.python.data.ops.dataset_ops.BatchDataset'>
+        '''
+        print(list(train_ds.as_numpy_iterator()))
 
 
 class FashionClassification(object):
