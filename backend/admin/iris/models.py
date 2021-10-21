@@ -172,7 +172,47 @@ class Iris(object):
         axes[1].set_ylabel("Accuracy", fontsize=14)
         axes[1].set_xlabel("Epoch", fontsize=14)
         axes[1].plot(train_accuracy_results)
-        plt.savefig(f'{self.vo.context}train_accuracy_results.png')
+        # plt.savefig(f'{self.vo.context}train_accuracy_results.png')
+        '''
+        테스트 데이터 세트를 사용한 모델 평가
+        훈련 단계와 달리 모델은 테스트 데이터의 단일 epoch만 평가합니다. 
+        '''
+        test_accuracy = tf.keras.metrics.Accuracy()
+
+        for (x, y) in test_dataset:
+            # training=False is needed only if there are layers with different
+            # behavior during training versus inference (e.g. Dropout).
+            logits = model(x, training=False)
+            prediction = tf.argmax(logits, axis=1, output_type=tf.int32)
+            test_accuracy(prediction, y)
+
+        print("Test set accuracy: {:.3%}".format(test_accuracy.result()))
+        print(f'tf.stack([y, prediction], axis=1) 결과: {tf.stack([y, prediction], axis=1)}')
+        '''
+        훈련된 모델로 예측하기
+        '''
+        predict_dataset = tf.convert_to_tensor([
+            [5.1, 3.3, 1.7, 0.5, ],
+            [5.9, 3.0, 4.2, 1.5, ],
+            [6.9, 3.1, 5.4, 2.1]
+        ])
+
+        # training=False is needed only if there are layers with different
+        # behavior during training versus inference (e.g. Dropout).
+        predictions = model(predict_dataset, training=False)
+
+        for i, logits in enumerate(predictions):
+            class_idx = tf.argmax(logits).numpy()
+            p = tf.nn.softmax(logits)[class_idx]
+            name = class_names[class_idx]
+            print("Example {} prediction: {} ({:4.1f}%)".format(i, name, 100 * p))
+
+        '''
+        Example 0 prediction: Iris setosa (95.9%)
+        Example 1 prediction: Iris versicolor (75.7%)
+        Example 2 prediction: Iris virginica (76.7%)
+        '''
+
 
     def grad(self, model, inputs, targets):
         with tf.GradientTape() as tape:
