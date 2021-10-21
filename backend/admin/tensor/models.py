@@ -3,6 +3,10 @@ from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 from admin.common.models import ValueObject
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+
 
 class TensorFunction(object):
     def __init__(self):
@@ -10,7 +14,7 @@ class TensorFunction(object):
         self.vo.context = 'admin/tensor/data/'
 
     def hook(self):
-        menu = 'train_tf_model_by_random_data'
+        menu = 'keras_sample'
         if menu =='tf_function':
             # result = self.tf_function()
             pass
@@ -31,9 +35,52 @@ class TensorFunction(object):
             self.create_tf_empty_model()
         elif menu == 'train_tf_model_by_random_data':
             self.train_tf_model_by_random_data()
+        elif menu == 'keras_sample':
+            self.keras_sample()
         else:
             result = '해당사항 없음'
             print(f'결과: {result}')
+
+    def keras_sample(self):
+        batch_size = 128
+        num_classes = 10
+        epochs = 20
+
+        (x_train, y_train), (x_test, y_test) = mnist.load_data()
+        x_train = x_train.reshape(60000, 784)
+        x_test = x_test.reshape(10000, 784)
+        x_train = x_train.astype('float32')
+        x_test = x_test.astype('float32')
+        x_train /= 255
+        x_test /= 255
+        y_train = keras.utils.to_categorical(y_train, num_classes)
+        y_test = keras.utils.to_categorical(y_test, num_classes)
+        model = Sequential()
+        model.add(Dense(512, activation='relu', input_shape=(784,)))
+        model.add(Dropout(0.2))
+        model.add(Dense(512, activation='relu'))
+        model.add(Dropout(0.2))
+        model.add(Dense(num_classes, activation='softmax'))
+        # print(model.summary())
+
+        model.compile(loss='categorical_crossentropy',
+                      optimizer='adam',
+                      metrics=['accuracy'])
+        history = model.fit(x_train, y_train,
+                            batch_size=batch_size,
+                            epochs=epochs,
+                            verbose=1,
+                            validation_data=(x_test, y_test))
+        plt.plot(epochs, history.history['loss'], label='Training Loss')
+        plt.xlabel('Epoch')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.savefig(f'{self.vo.context}keras_sample.png')
+        score = model.evaluate(x_test, y_test, verbose=0)
+        print('Test loss: ', score[0])
+        print('Test accuracy: ', score[1])
+        model.save(f'{self.vo.context}keras_sample.h5')
+
 
 
     def train_tf_model_by_random_data(self):
@@ -53,7 +100,7 @@ class TensorFunction(object):
     def create_tf_empty_model(self):
         '''
         model = keras.models.Sequential([
-            keras.layers.Flatten(input_shape=[1, 150]),
+            keras.layers.Flatten(input_shape=[1,1]),
             keras.layers.Dropout(rate=0.2),
             keras.layers.Dense(units=1, activation='relu', input_dim=1),
             keras.layers.Dropout(rate=0.2),
