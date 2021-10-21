@@ -10,3 +10,9 @@ from admin.myCV2.models import MyCV2
 def lena(request):
     MyCV2().lena()
     return JsonResponse({'MyCV2 LENA': 'SUCCESS'})
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def girl(request):
+    MyCV2().girl()
+    return JsonResponse({'MyCV2 Girl': 'SUCCESS'})
