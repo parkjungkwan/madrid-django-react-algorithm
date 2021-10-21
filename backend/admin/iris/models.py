@@ -6,7 +6,6 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
 from admin.common.models import ValueObject
-from admin.tensor.models import Perceptron
 
 
 class Iris(object):
@@ -67,8 +66,8 @@ class Iris(object):
         iris_mini = iris.iloc[0:100, 4].values
         y = np.where(iris_mini == 'Iris-setosa', -1, 1)
         X = iris.iloc[0:100, [0,2]].values
-        clf = Perceptron(eta = 0.1, n_iter=10)
         self.draw_scatter(X)
+
 
     def draw_scatter(self, X):
         plt.scatter(X[:50, 0], X[:50, 1], color='red', marker='o', label='setosa')
