@@ -16,3 +16,9 @@ def lena(request):
 def girl(request):
     MyCV2().girl()
     return JsonResponse({'MyCV2 Girl': 'SUCCESS'})
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def face_detect(request):
+    MyCV2().face_detect()
+    return JsonResponse({'MyCV2 face_detect': 'SUCCESS'})
