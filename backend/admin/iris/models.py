@@ -4,14 +4,29 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
-
-from admin.common.models import ValueObject
-
+from keras.datasets import mnist
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+import tensorflow as tf
+from admin.common.models import ValueObject, Reader
+import os
 
 class Iris(object):
     def __init__(self):
         self.vo = ValueObject()
         self.vo.context = 'admin/iris/data/'
+
+    def iris_by_tf(self):
+        reader = Reader()
+        vo = self.vo
+        train_dataset_url = "https://storage.googleapis.com/download.tensorflow.org/data/iris_training.csv"
+        train_dataset_fp = tf.keras.utils.get_file(fname=os.path.basename(train_dataset_url),
+                                                   origin=train_dataset_url)
+        # print("Local copy of the dataset file: {}".format(train_dataset_fp)) # 파일 저장경로
+        # print(f'type: {type(train_dataset_fp)}') # 해당 경로로 가서 data 폴더로 이동시킨다.
+        vo.fname = 'iris_training'
+        iris_df = reader.csv(reader.new_file(vo))
+        print(f'iris_df HEAD: {iris_df.head(3)}')
 
     def base(self):
         np.random.seed(0)
@@ -76,6 +91,8 @@ class Iris(object):
         plt.ylabel('petal length[cm]')
         plt.legend(loc='upper left')
         plt.savefig(f'{self.vo.context}iris_scatter.png')
+
+
 
 
 

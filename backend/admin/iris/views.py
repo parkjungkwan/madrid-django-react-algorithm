@@ -11,9 +11,14 @@ def base(request):
     Iris().base()
     return JsonResponse({'Iris Base': 'SUCCESS'})
 
-
 @api_view(['GET'])
 @parser_classes([JSONParser])
 def advanced(request):
     Iris().advanced()
     return JsonResponse({'Iris Advanced': 'SUCCESS'})
+
+@api_view(['GET'])
+@parser_classes([JSONParser])
+def iris_by_tf(request):
+    Iris().iris_by_tf()
+    return JsonResponse({'Iris Tensorflow': 'SUCCESS'})
