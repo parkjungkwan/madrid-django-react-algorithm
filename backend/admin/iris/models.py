@@ -61,10 +61,22 @@ class Iris(object):
         plt.ylabel("Sepal length")
         # plt.savefig(f'{self.vo.context}iris_tf_scatter.png')
 
-        train_dataset = train_dataset.map(self.pack_features_vector())
-        features, labels = next(iter(train_dataset))
-        print(f'features[:5] 의 값 : {features[:5]}')
+        test_dataset = tf.data.experimental.make_csv_dataset(
+            test_fp,
+            batch_size,
+            column_names=column_names,
+            label_name='species',
+            num_epochs=1,
+            shuffle=False)
 
+
+
+        train_dataset = train_dataset.map(self.pack_features_vector)
+        features, labels = next(iter(train_dataset))
+        print(f'train_dataset features[:5] 의 값 : {features[:5]}')
+        test_dataset = test_dataset.map(self.pack_features_vector)
+        features, labels = next(iter(test_dataset))
+        print(f'test_dataset features[:5] 의 값 : {features[:5]}')
         '''
         모델 타입 선정
         모델은 특성과 레이블 간의 관계입니다.
@@ -175,7 +187,7 @@ class Iris(object):
 
         return loss_object(y_true=y, y_pred=y_)
 
-    def pack_features_vector(features, labels):
+    def pack_features_vector(self, features, labels):
         """Pack the features into a single array."""
         features = tf.stack(list(features.values()), axis=1)
         return features, labels
