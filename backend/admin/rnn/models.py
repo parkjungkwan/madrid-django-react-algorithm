@@ -19,6 +19,13 @@ import matplotlib.pyplot as plt
 from fbprophet import Prophet
 from datetime import datetime
 from pandas_datareader import data
+import math
+import pandas_datareader as data_reader
+from tqdm import tqdm
+import numpy as np
+import tensorflow as tf
+from collections import deque
+import random
 import yfinance as yf
 yf.pdr_override()
 path = "c:/Windows/Fonts/malgun.ttf"
@@ -45,6 +52,8 @@ class MyRNN(object):
         self.vo = ValueObject()
         self.vo.context = 'admin/rnn/data/'
 
+
+
     def kia_predict(self):
         start_date = '2018-1-4'
         end_date = '2021-9-30'
@@ -69,8 +78,6 @@ class MyRNN(object):
         plt.grid()
         plt.legend()
         plt.savefig(f'{self.vo.context}kia_close.png')
-
-        pass
 
     def ram_price(self):
         ram_price = pd.read_csv(os.path.join(mglearn.datasets.DATA_PATH, "ram_price.csv"))
