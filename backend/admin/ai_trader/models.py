@@ -8,7 +8,10 @@ from collections import deque
 import random
 
 from admin.common.models import ValueObject
-
+'''
+pip install --upgrade pandas
+pip install --upgrade pandas-datareader
+'''
 
 class AITrader(object):
     def __init__(self, action_space=3, model_name='AITrader'):
@@ -23,30 +26,31 @@ class AITrader(object):
         self.epsilon = 1.0
         self.epsilon_final = 0.01
         self.epsilon_decay = 0.995
+        self.model = self.model_builder()
+
+    def process(self):
+        Trading().transaction('AAPL')
 
     def model_builder(self):
         model = tf.keras.models.Sequential([
             tf.keras.layers.Dense(units=32, activation='relu', input_dim=self.state_size),
-            tf.keras.layers.Dropout(rate='0.2'),
             tf.keras.layers.Dense(units=64, activation='relu'),
-            tf.keras.layers.Dropout(rate='0.2'),
             tf.keras.layers.Dense(units=128, activation='relu'),
-            tf.keras.layers.Dropout(rate='0.2'),
             tf.keras.layers.Dense(units=self.action_space, activation='linear'),
-            tf.keras.layers.Dropout(rate='0.2'),
             tf.keras.layers.Dense(10, activation='softmax')
         ])
         model.compile(loss='mse', optimizer = tf.keras.optimizers.Adam(lr=0.001))
-        model.save(f'{self.vo.context}ai_trader.h5')
+        return model
 
-    def trade(self, state, model):
-        # model = tf.keras.models.load_model(f'{self.vo.context}ai_trader.h5')
+
+    def trade(self, state):
         if random.random() <= self.epsilon:
             return random.randrange(self.action_space)
-        actions = model.predict(state)
+        actions = self.model.predict(state)
         return np.argmax(actions[0])
 
-    def batch_train(self, batch_size, model):
+    def batch_train(self, batch_size):
+        model = self.model
         batch = []
         for i in range(len(self.memory) - batch_size + 1, len(self.memory)):
             batch.append(self.memory[i])
@@ -74,9 +78,10 @@ class Trading:
             return "$ {0:2f}".format(abs(n))
 
     def dataset_loader(self, stock_name):
+        print(f'############# 2 : dataset_loader IN ############## {stock_name}')
         dataset = data_reader.DataReader(stock_name, data_source='yahoo')
-        start_date = str(dataset.index[0]).split()[0]
-        end_date = str(dataset.index[-1]).split()[0]
+        # start_date = str(dataset.index[0]).split()[0]
+        # end_date = str(dataset.index[-1]).split()[0]
         close = dataset['Close']
         return close
 
@@ -93,9 +98,11 @@ class Trading:
         return np.array([state])
 
     def transaction(self, stock_name):
+        print(f'############# 1 : transaction IN ############## {stock_name}')
         data = self.dataset_loader(stock_name)
+        print(f'############# 3 : dataset_loader OUT ############## {stock_name}')
         window_size = 10
-        episodes = 1000
+        episodes = 100
         batch_size = 32
         data_samples = len(data) -1
         trader = AITrader(window_size)
@@ -116,8 +123,8 @@ class Trading:
                     buy_price = trader.inventory.pop(0)
                     reward = max(data[t] - buy_price, 0)
                     total_profit += data[t] - buy_price
-                    print("AI 트레이더 매도: ", self.stocks_price_format(data[t]),
-                          "이익: " + self.stocks_price_format(data[t] - buy_price))
+                    print("AI 트레이더 매도: ", self.stock_price_format(data[t]),
+                          "이익: " + self.stock_price_format(data[t] - buy_price))
                 if t == data_samples -1:
                     done = True
                 else:
@@ -135,7 +142,7 @@ class Trading:
                     trader.batch_train(batch_size)
 
             if episode % 10 == 0:
-                pass
+                trader.model.save(f'{self.vo.context}ai_trader_{episode}.h5')
 
 
 

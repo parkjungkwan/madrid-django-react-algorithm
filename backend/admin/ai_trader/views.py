@@ -8,7 +8,7 @@ from admin.tensor.models import Calculator, FashionClassification, TensorFunctio
 
 @api_view(['GET'])
 @parser_classes([JSONParser])
-def model_builder(request):
-    AITrader().model_builder()
-    return JsonResponse({'AI Trader model_builder': 'SUCCESS'})
+def process(request):
+    AITrader().process()
+    return JsonResponse({'AI Trader process': 'SUCCESS'})
 
