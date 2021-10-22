@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'admin.crawling',
     'admin.tensor',
     'admin.rnn',
+    'admin.ai_trader',
     'rest_framework',
     'corsheaders',
     'django.contrib.admin',

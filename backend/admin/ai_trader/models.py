@@ -11,10 +11,10 @@ from admin.common.models import ValueObject
 
 
 class AITrader(object):
-    def __init__(self, state_size, action_space=3, model_name='AITrader'):
+    def __init__(self, action_space=3, model_name='AITrader'):
         self.vo = ValueObject()
         self.vo.context = 'admin/ai_trader/data/'
-        self.state_size = state_size
+        self.state_size = 10 # windwo_size
         self.action_space = action_space
         self.memory = deque(maxlen=2000)
         self.inventory = []
@@ -23,7 +23,6 @@ class AITrader(object):
         self.epsilon = 1.0
         self.epsilon_final = 0.01
         self.epsilon_decay = 0.995
-        self.model = self.model_builder()
 
     def model_builder(self):
         model = tf.keras.models.Sequential([
