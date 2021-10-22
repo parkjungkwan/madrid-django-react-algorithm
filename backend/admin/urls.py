@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/crawling/', include('admin.crawling.urls')),
     path('api/iris/', include('admin.iris.urls')),
     path('api/myCV2/', include('admin.myCV2.urls')),
+    path('api/rnn/', include('admin.rnn.urls')),
 ]

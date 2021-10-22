@@ -22,10 +22,11 @@ class MyCV2(object):
             print('얼굴 인식 실패')
             quit()
         for(x, y, w, h) in face:
-            red = (0, 0, 255)
-            cv2.rectangle(image, (x, y), (x+w, y+h), red, thickness=20)
+            # red = (0, 0, 255)
+            # cv2.rectangle(image, (x, y), (x+w, y+h), red, thickness=20)
+            mos = self.mosaic(image, (x, y, x+w, y+h), 10)
 
-        cv2.imwrite(f'{vo.context}face_detection.png', image)
+        cv2.imwrite(f'{vo.context}face_mosaic.png', mos)
         cv2.waitKey(0)  # 키입력을 기다리는 대기함수, 0은 즉시 실행
         cv2.destroyAllWindows()  # 윈도우 종료
 
