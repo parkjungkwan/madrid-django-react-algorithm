@@ -1,14 +1,19 @@
+from collections import defaultdict
+
+import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-import numpy as np
 import matplotlib.pyplot as plt
 from selenium import webdriver
-from time import sleep
 from bs4 import BeautifulSoup
-import pandas as pd
 import csv
 from admin.common.models import ValueObject
-import datetime
+import pandas as pd
+
+
+
+
+
 class NaverMovie(object):
     def __init__(self):
         self.vo = ValueObject()
@@ -26,10 +31,29 @@ class NaverMovie(object):
             wr.writerows(products)
         driver.close()
 
-
-
     def naver_process(self):
-        self.web_scraping()
+        ctx = self.vo.context
+        # self.web_scraping()
+        corpus = pd.read_table(f'{ctx}naver_movie_dataset.csv', sep=',', encoding='UTF-8')
+        train_X = np.array(corpus)
+        # 카테고리 0 (긍정) 1 (부정)
+        n_class0 = len([1 for _, point in train_X if point > 3.5])
+        n_class1 = len([train_X]) - n_class0
+        counts = defaultdict(lambda : [0,0])
+        for doc, point in train_X:
+            if self.isNumber(doc) is False:
+                words = doc.split()
+                for word in words:
+                    counts[word][0 if point > 3.5 else 1] += 1
+        word_counts = counts
+        print(f'word_counts ::: {word_counts}')
+
+    def isNumber(self, doc):
+        try:
+            float(doc)
+            return True
+        except ValueError:
+            return False
 
 
 
