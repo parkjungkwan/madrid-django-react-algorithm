@@ -9,7 +9,7 @@ from admin.common.models import ValueObject
 class Imdb(object):
     def __init__(self):
         self.vo = ValueObject()
-        self.vo.context = 'admin/imdb/data/'
+        self.vo.context = 'admin/nlp2/data/'
 
     def decode_review(self, text,reverse_word_index):
         return ' '.join([reverse_word_index.get(i, '?') for i in text])
@@ -29,7 +29,7 @@ class Imdb(object):
                                                              value=word_index['<PAD>'],
                                                              padding='post',
                                                              maxlen=256)
-        test_X = keras.preprocessing.sequence.pad_sequences(train_X,
+        test_X = keras.preprocessing.sequence.pad_sequences(test_X,
                                                              value=word_index['<PAD>'],
                                                              padding='post',
                                                              maxlen=256)
