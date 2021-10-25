@@ -6,17 +6,20 @@ import matplotlib.pyplot as plt
 from admin.common.models import ValueObject
 
 
-class Imdb2(object):
+class MyImdb(object):
     def __init__(self):
         self.vo = ValueObject()
-        self.vo.context = 'admin/imdb/data/'
+        self.vo.context = 'admin/myNLP/data/'
 
     def decode_review(self, text,reverse_word_index):
         return ' '.join([reverse_word_index.get(i, '?') for i in text])
 
     def imdb_process(self):
         imdb = keras.datasets.imdb
-        (train_X, train_Y), (test_X), (test_Y) = imdb.load_data(num_words=100000)
+
+        (train_X, train_Y), (test_X, test_Y) = imdb.load_data(num_words=100000)
+        print(f'>>>>>{type(train_X)}')
+        
         word_index = imdb.get_word_index()
         word_index = {k: (v + 3) for k, v in word_index.items()}
         word_index["<PAD>"] = 0
@@ -29,7 +32,7 @@ class Imdb2(object):
                                                              value=word_index['<PAD>'],
                                                              padding='post',
                                                              maxlen=256)
-        test_X = keras.preprocessing.sequence.pad_sequences(train_X,
+        test_X = keras.preprocessing.sequence.pad_sequences(test_X,
                                                              value=word_index['<PAD>'],
                                                              padding='post',
                                                              maxlen=256)
@@ -43,7 +46,7 @@ class Imdb2(object):
         x_val = train_X[:10000]
         partial_X_train = train_X[10000:]
         y_val = train_Y[:10000]
-        partial_Y_train = train_X[10000:]
+        partial_Y_train = train_Y[10000:]
         history = model.fit(partial_X_train, partial_Y_train, epochs=40, batch_size=512, validation_data=(x_val, y_val))
         result = model.evaluate(test_X, test_Y)
         print(f'{result}')
@@ -75,6 +78,7 @@ class Imdb2(object):
         plt.ylabel('Accuracy')
         plt.legend()
         plt.savefig(f'{self.vo.context}imdb_nlp.png')
+
 
 
 

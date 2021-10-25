@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'admin.tensor',
     'admin.rnn',
     'admin.ai_trader',
-    'admin.nlp2',
+    'admin.myNLP',
     'rest_framework',
     'corsheaders',
     'django.contrib.admin',
