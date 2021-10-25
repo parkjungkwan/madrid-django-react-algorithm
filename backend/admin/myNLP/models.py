@@ -8,24 +8,29 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import csv
 from admin.common.models import ValueObject
-
+import datetime
 class NaverMovie(object):
     def __init__(self):
         self.vo = ValueObject()
         self.vo.context = 'admin/myNLP/data/'
 
-    def naver_process(self):
+    def web_scraping(self):
         ctx = self.vo.context
         driver = webdriver.Chrome(f'{ctx}chromedriver')
         driver.get('https://movie.naver.com/movie/sdb/rank/rmovie.naver')
-        soup = BeautifulSoup(driver.page_source, 'html_parser')
+        soup = BeautifulSoup(driver.page_source, 'html.parser')
         all_divs = soup.find_all('div', attrs={'class', 'tit3'})
-        products = [div.a.string for div in all_divs]
-        for product in products:
-            with open(f'{ctx}naver_movie_dataset.csv', 'w', encoding='UTF-8', newline='') as f:
-                wr = csv.writer(f, delimiter=',')
-                wr.writerows(product)
+        products = [[div.a.string for div in all_divs]]
+        with open(f'{ctx}naver_movie_dataset.csv', 'w', newline='', encoding='UTF-8') as f:
+            wr = csv.writer(f)
+            wr.writerows(products)
         driver.close()
+
+
+
+    def naver_process(self):
+        self.web_scraping()
+
 
 
 class MyImdb(object):
