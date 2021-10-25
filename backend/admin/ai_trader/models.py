@@ -1,9 +1,9 @@
 import math
 import pandas_datareader as data_reader
-import numpy as np
 from tqdm import tqdm
 import numpy as np
 import tensorflow as tf
+
 from collections import deque
 import random
 
@@ -42,7 +42,6 @@ class AITrader(object):
         model.compile(loss='mse', optimizer = tf.keras.optimizers.Adam(lr=0.001))
         return model
 
-
     def trade(self, state):
         if random.random() <= self.epsilon:
             return random.randrange(self.action_space)
@@ -78,7 +77,7 @@ class Trading:
             return "$ {0:2f}".format(abs(n))
 
     def dataset_loader(self, stock_name):
-        print(f'############# 2 : dataset_loader IN ############## {stock_name}')
+
         dataset = data_reader.DataReader(stock_name, data_source='yahoo')
         # start_date = str(dataset.index[0]).split()[0]
         # end_date = str(dataset.index[-1]).split()[0]
@@ -98,9 +97,9 @@ class Trading:
         return np.array([state])
 
     def transaction(self, stock_name):
-        print(f'############# 1 : transaction IN ############## {stock_name}')
+
         data = self.dataset_loader(stock_name)
-        print(f'############# 3 : dataset_loader OUT ############## {stock_name}')
+
         window_size = 10
         episodes = 100
         batch_size = 32
