@@ -54,11 +54,13 @@ class NaverMovie(object):
                 for word in words:
                     counts[word][0 if point > 3.5 else 1] += 1
         word_counts = counts
-        print(f'word_counts ::: {dict(word_counts)}')
+        # print(f'word_counts ::: {dict(word_counts)}')
         '''
         '재밋었네요': [1, 0]
         '별로재미없다': [0, 1]
-        '''
+        
+        () for i, j in []:
+            pass'''
 
 
     def isNumber(self, doc):
