@@ -16,6 +16,7 @@ class NaverMovie(object):
     def __init__(self):
         self.vo = ValueObject()
         self.vo.context = 'admin/myNLP/data/'
+        self.k = 0.5
 
     def naver_process(self):
         n = NaverMovie()
@@ -57,21 +58,34 @@ class NaverMovie(object):
             wr.writerows(products)
         driver.close()
 
-    def model_fit(self):
-        ctx = self.vo.context
-        # self.web_scraping()
-        corpus = pd.read_table(f'{ctx}review_train.csv', sep=',', encoding='UTF-8')
+    def load_corpus(self, fname):
+        corpus = pd.read_table(f'{self.vo.context}review_train.csv', sep=',', encoding='UTF-8')
         # print(f'type(corpus)::: {type(corpus)}')
         # print(f'corpus::: {corpus}')
         train_X = np.array(corpus)
+        return train_X
+
+    def count_words(self, train_X):
         # 카테고리 0 (긍정) 1 (부정)
-        default_counts = defaultdict(lambda : [0,0])
+        default_counts = defaultdict(lambda: [0, 0])
         for doc, point in train_X:
             if self.isNumber(doc) is False:
                 words = doc.split()
                 for word in words:
                     default_counts[word][0 if point > 3.5 else 1] += 1
-        counts = dict(default_counts)
+        return dict(default_counts)
+
+    def word_probs(self, counts, n_class0, n_class1, k):
+        return [(w,
+          (class0 + k) / (n_class0 + 2*k),
+          (class1 + k) / (n_class1 + 2 * k),
+          ) for w, (class0, class1) in counts.items()]
+
+    def model_fit(self):
+        ctx = self.vo.context
+        # self.web_scraping()
+
+
         # print(f'word_counts ::: {counts}')
         '''
         '재밋었네요': [1, 0]
@@ -80,10 +94,7 @@ class NaverMovie(object):
         n_class0 = len([1 for _, point in train_X if point > 3.5])
         n_class1 = len([train_X]) - n_class0
         k = 0.5
-        word_prob = [(w,
-          (class0 + k) / (n_class0 + 2*k),
-          (class1 + k) / (n_class1 + 2 * k),
-          ) for w, (class0, class1) in counts.items()]
+        word_prob =
         print(f'확률: {word_prob}')
 
 
