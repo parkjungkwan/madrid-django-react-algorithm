@@ -1,3 +1,4 @@
+import math
 from collections import defaultdict
 
 import numpy as np
@@ -11,13 +12,32 @@ from admin.common.models import ValueObject
 import pandas as pd
 
 
-
-
-
 class NaverMovie(object):
     def __init__(self):
         self.vo = ValueObject()
         self.vo.context = 'admin/myNLP/data/'
+
+    def naver_process(self):
+        n = NaverMovie()
+        n.model_fit()
+        n.classify('내 인생 최고의 영화')
+
+    def classify(self, doc):
+        return self.class0_probs(self.model_fit(), doc)
+
+    def class0_probs(self, word_probs, doc):
+        docwords = doc.split()
+        log_prob_if_class0 = log_prob_if_class1 = 0.0
+        for word, log_prob_if_class0, log_prob_if_class1 in word_probs:
+            if word in docwords:
+                log_prob_if_class0 += math.log(log_prob_if_class0)
+                log_prob_if_class1 += math.log(log_prob_if_class1)
+            else:
+                log_prob_if_class0 += math.log(1.0 - log_prob_if_class0)
+                log_prob_if_class1 += math.log(1.0 - log_prob_if_class1)
+        prob_if_class0 = math.exp(log_prob_if_class0)
+        prob_if_class1 = math.exp(log_prob_if_class1)
+        return prob_if_class0 / (prob_if_class0 + prob_if_class1)
 
     def web_scraping(self):
         ctx = self.vo.context
@@ -37,30 +57,36 @@ class NaverMovie(object):
             wr.writerows(products)
         driver.close()
 
-    def naver_process(self):
+    def model_fit(self):
         ctx = self.vo.context
         # self.web_scraping()
         corpus = pd.read_table(f'{ctx}review_train.csv', sep=',', encoding='UTF-8')
-        print(f'type(corpus)::: {type(corpus)}')
-        print(f'corpus::: {corpus}')
+        # print(f'type(corpus)::: {type(corpus)}')
+        # print(f'corpus::: {corpus}')
         train_X = np.array(corpus)
         # 카테고리 0 (긍정) 1 (부정)
-        n_class0 = len([1 for _, point in train_X if point > 3.5])
-        n_class1 = len([train_X]) - n_class0
-        counts = defaultdict(lambda : [0,0])
+        default_counts = defaultdict(lambda : [0,0])
         for doc, point in train_X:
             if self.isNumber(doc) is False:
                 words = doc.split()
                 for word in words:
-                    counts[word][0 if point > 3.5 else 1] += 1
-        word_counts = counts
-        # print(f'word_counts ::: {dict(word_counts)}')
+                    default_counts[word][0 if point > 3.5 else 1] += 1
+        counts = dict(default_counts)
+        # print(f'word_counts ::: {counts}')
         '''
         '재밋었네요': [1, 0]
         '별로재미없다': [0, 1]
-        
-        () for i, j in []:
-            pass'''
+        '''
+        n_class0 = len([1 for _, point in train_X if point > 3.5])
+        n_class1 = len([train_X]) - n_class0
+        k = 0.5
+        word_prob = [(w,
+          (class0 + k) / (n_class0 + 2*k),
+          (class1 + k) / (n_class1 + 2 * k),
+          ) for w, (class0, class1) in counts.items()]
+        print(f'확률: {word_prob}')
+
+
 
 
     def isNumber(self, doc):

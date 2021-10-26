@@ -1,7 +1,15 @@
 from django.test import TestCase
 
 # Create your tests here.
+from .models import NaverMovie
+
 if __name__ == '__main__':
+    n = NaverMovie()
+    n.model_fit()
+    n.classify('내 인생 최고의 영화')
+    
+
+
     # 방법1 range()
     dc1 = {}
     dc2 = {}
