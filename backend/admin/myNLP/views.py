@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, parser_classes
 from rest_framework.parsers import JSONParser
-from admin.myNLP.models import MyImdb, NaverMovie
+from admin.myNLP.model import NaverMovie, MyImdb
 
 
 @api_view(['GET'])

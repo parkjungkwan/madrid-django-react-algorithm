@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 # Create your tests here.
-from .models import NaverMovie
+from .models_2 import NaverMovie
 
 if __name__ == '__main__':
     n = NaverMovie()
