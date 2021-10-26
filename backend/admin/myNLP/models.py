@@ -29,12 +29,20 @@ class NaverMovie(object):
         with open(f'{ctx}naver_movie_dataset.csv', 'w', newline='', encoding='UTF-8') as f:
             wr = csv.writer(f)
             wr.writerows(products)
+        driver.get('https://movie.naver.com/movie/point/af/list.naver')
+        all_divs = soup.find_all('div', attrs={'class', 'tit3'})
+        products = [[div.a.string for div in all_divs]]
+        with open(f'{ctx}review_train.csv', 'w', newline='', encoding='UTF-8') as f:
+            wr = csv.writer(f)
+            wr.writerows(products)
         driver.close()
 
     def naver_process(self):
         ctx = self.vo.context
         # self.web_scraping()
-        corpus = pd.read_table(f'{ctx}naver_movie_dataset.csv', sep=',', encoding='UTF-8')
+        corpus = pd.read_table(f'{ctx}review_train.csv', sep=',', encoding='UTF-8')
+        print(f'type(corpus)::: {type(corpus)}')
+        print(f'corpus::: {corpus}')
         train_X = np.array(corpus)
         # 카테고리 0 (긍정) 1 (부정)
         n_class0 = len([1 for _, point in train_X if point > 3.5])
@@ -46,7 +54,12 @@ class NaverMovie(object):
                 for word in words:
                     counts[word][0 if point > 3.5 else 1] += 1
         word_counts = counts
-        print(f'word_counts ::: {word_counts}')
+        print(f'word_counts ::: {dict(word_counts)}')
+        '''
+        '재밋었네요': [1, 0]
+        '별로재미없다': [0, 1]
+        '''
+
 
     def isNumber(self, doc):
         try:
