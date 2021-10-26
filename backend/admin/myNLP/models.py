@@ -81,11 +81,10 @@ class NaverMovie(object):
           (class1 + k) / (n_class1 + 2 * k),
           ) for w, (class0, class1) in counts.items()]
 
-    def model_fit(self):
+    def model_fit(self, fname):
         ctx = self.vo.context
         # self.web_scraping()
-
-
+        train_X = self.load_corpus(fname)
         # print(f'word_counts ::: {counts}')
         '''
         '재밋었네요': [1, 0]
@@ -93,9 +92,12 @@ class NaverMovie(object):
         '''
         n_class0 = len([1 for _, point in train_X if point > 3.5])
         n_class1 = len([train_X]) - n_class0
-        k = 0.5
-        word_prob =
-        print(f'확률: {word_prob}')
+        word_counts = self.count_words(train_X)
+        ls = self.word_probs(word_counts, n_class0, n_class1, self.k)
+        print(type(ls)) # list
+        return ls
+
+
 
 
 
