@@ -28,4 +28,5 @@ urlpatterns = [
     path('api/myRNN/', include('admin.myRNN.urls')),
     path('api/ai_trader/', include('admin.ai_trader.urls')),
     path('api/myNLP/', include('admin.myNLP.urls')),
+    path('api/myGAN/', include('admin.myGAN.urls')),
 ]
