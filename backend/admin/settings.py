@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'admin.crime',
     'admin.crawling',
     'admin.tensor',
-    'admin.rnn',
+    'admin.myRNN',
     'admin.ai_trader',
     'admin.myNLP',
     'rest_framework',

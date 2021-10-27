@@ -50,7 +50,7 @@ plt.rcParams['axes.unicode_minus'] = False
 class MyRNN(object):
     def __init__(self):
         self.vo = ValueObject()
-        self.vo.context = 'admin/rnn/data/'
+        self.vo.context = 'admin/myRNN/data/'
 
 
 

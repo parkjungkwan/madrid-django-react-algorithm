@@ -1,16 +1,6 @@
 from django.test import TestCase
 
 # Create your tests here.
-import tensorflow.compat.v1 as tf
-tf.disable_v2_behavior()
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-import os
-import matplotlib.pyplot as plt
-from tensorflow.python.keras import datasets
-from tensorflow import keras
-print(f'{tf.__version__}')
 
 if __name__ == '__main__':
     # 방법1 range()
