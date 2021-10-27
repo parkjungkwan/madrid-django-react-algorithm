@@ -1,15 +1,18 @@
 from django.test import TestCase
 
 # Create your tests here.
-from .models_2 import NaverMovie
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, Dropout, MaxPooling2D
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import os
+import matplotlib.pyplot as plt
+from tensorflow.python.keras import datasets
+from tensorflow import keras
+print(f'{tf.__version__}')
 
 if __name__ == '__main__':
-    n = NaverMovie()
-    n.model_fit()
-    n.classify('내 인생 최고의 영화')
-    
-
-
     # 방법1 range()
     dc1 = {}
     dc2 = {}
