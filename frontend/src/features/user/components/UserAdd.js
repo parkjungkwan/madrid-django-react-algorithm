@@ -4,11 +4,11 @@ import { useHistory  } from 'react-router-dom';
 
 export default function UserAdd() {
     const history = useHistory()
-    const SERVER = 'http://localhost:8080'
+    const SERVER = 'http://localhost:8000/api'
     const [join, setJoin] = useState({
-        username:'', password:'', email:'', name:'', regDate: new Date().toLocaleDateString()
+        username:'', password:'', email:'', name:'', address: '', birth: new Date().toLocaleDateString()
     })
-    const {username, password, email, name} = join
+    const {username, password, email, name, address, birth} = join
     const handleChange = e => {
         const { value, name } = e.target
         setJoin({
@@ -63,6 +63,15 @@ export default function UserAdd() {
             <li>
                 <label>
                     이름 : <input type="text" id="name" name="name" value={name} onChange={handleChange}/>
+                </label>
+            </li>
+            <li>
+                <label>
+                    주소 : <input type="text" id="address" name="address" value={address} onChange={handleChange}/>                </label>
+            </li>
+            <li>
+                <label>
+                    등록일 : <input type="text" id="birth" name="birth" value={birth} onChange={handleChange}/>
                 </label>
             </li>
            
