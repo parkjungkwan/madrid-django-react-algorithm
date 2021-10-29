@@ -68,13 +68,8 @@ export default function UserAdd() {
             <li>
                 <label>
                     주소 : <input type="text" id="address" name="address" value={address} onChange={handleChange}/>                </label>
+                    <input type="hidden" id="birth" name="birth" value={birth} onChange={handleChange}/>
             </li>
-            <li>
-                <label>
-                    등록일 : <input type="text" id="birth" name="birth" value={birth} onChange={handleChange}/>
-                </label>
-            </li>
-           
             <li>
                 <input type="submit" value="회원가입"/>
             </li>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import { useHistory  } from 'react-router-dom';
 export default function UserLogin() {
-  const SERVER = 'http://localhost:8080'
+  const SERVER = 'http://localhost:8000/api'
   const [login, setLogin] = useState({})
   const {username, password} = login
   const history = useHistory()

@@ -24,15 +24,26 @@ def users(request):
 
         return None
 
-@api_view(['GET','POST'])
-@parser_classes([JSONParser])
-def users(request, id):
+@api_view(['DELETE'])
+def remove(request, id):
     pass
 
 @api_view(['POST'])
-@parser_classes([JSONParser])
 def login(request):
-    pass
+    print('+++++++ try 밖에 있음 ++++++++')
+    try:
+        print('*' * 50)
+        print('try 에 들어옴')
+        loginUser = request.data
+        print('*' * 100)
+        ic(loginUser)
+        serializer = UserSerializer(loginUser, many=True)
+        return JsonResponse(data=serializer, safe=False)
+    except User.DoesNotExist:
+        print('*' * 50)
+        print('에러 발생')
+        return JsonResponse(data=serializer, safe=False)
+
 
 
 
