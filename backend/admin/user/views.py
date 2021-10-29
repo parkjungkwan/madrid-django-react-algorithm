@@ -30,19 +30,26 @@ def remove(request, id):
 
 @api_view(['POST'])
 def login(request):
-    print('+++++++ try 밖에 있음 ++++++++')
     try:
-        print('*' * 50)
-        print('try 에 들어옴')
         loginUser = request.data
-        print('*' * 100)
+        # print(f'{type(loginUser)}') # <class 'dict'>
         ic(loginUser)
-        serializer = UserSerializer(loginUser, many=True)
-        return JsonResponse(data=serializer, safe=False)
+        dbUser = User.objects.get(pk = loginUser['username'])
+        # print(f'{type(dbUser)}') # <class 'admin.user.models.User'>
+        ic(dbUser)
+        if loginUser['password'] == dbUser.password:
+            print('******** 로그인 성공')
+            userSerializer = UserSerializer(dbUser, many=False)
+            ic(userSerializer)
+            return JsonResponse(data=userSerializer.data, safe=False)
+        else:
+            print('******** 비밀번호 오류')
+            return JsonResponse(data={'result':'PASSWORD-FAIL'}, status=201)
+
     except User.DoesNotExist:
         print('*' * 50)
-        print('에러 발생')
-        return JsonResponse(data=serializer, safe=False)
+        print('******** Username 오류')
+        return JsonResponse(data={'result':'USERNAME-FAIL'}, status=201)
 
 
 
